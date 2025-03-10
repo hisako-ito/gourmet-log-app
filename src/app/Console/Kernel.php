@@ -15,7 +15,11 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        // Bladeキャッシュの自動削除（毎日）
+        $schedule->command('view:clear')->daily();
+
+        // 古いセッションファイルを削除（7日以上前）
+        $schedule->exec("find storage/framework/sessions -type f -mtime +7 -delete")->daily();
     }
 
     /**
@@ -25,7 +29,7 @@ class Kernel extends ConsoleKernel
      */
     protected function commands()
     {
-        $this->load(__DIR__.'/Commands');
+        $this->load(__DIR__ . '/Commands');
 
         require base_path('routes/console.php');
     }

@@ -1,5 +1,5 @@
+@include('layouts.navigation')
 <x-guest-layout>
-    @include('layouts.navigation')
     <div class="flex min-h-screen bg-gray-100 justify-center items-center px-4">
         <div class="w-full max-w-md">
             <div class="relative bg-white shadow-md rounded-md">
@@ -23,7 +23,7 @@
                         </span>
                         <x-input id="email"
                             class="block w-full border-none border-b-2 focus:border-blue-500 focus:outline-none bg-transparent"
-                            type="email" name="email" :value="old('email')" required autofocus placeholder="Email" />
+                            type="email" name="email" :value="old('email')" autofocus placeholder="Email" />
                     </div>
 
                     <!-- Password -->
@@ -33,7 +33,7 @@
                         </span>
                         <x-input id="password"
                             class="block w-full border-none border-b-2 focus:border-blue-500 focus:outline-none bg-transparent"
-                            type="password" name="password" required autocomplete="current-password"
+                            type="password" name="password" autocomplete="current-password"
                             placeholder="Password" />
                     </div>
 

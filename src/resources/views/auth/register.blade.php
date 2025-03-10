@@ -22,7 +22,7 @@
                         </span>
                         <x-input id="name"
                             class="block w-full border-none border-b-2 focus:border-blue-500 focus:outline-none bg-transparent"
-                            type="text" name="name" :value="old('name')" required autofocus placeholder="name" />
+                            type="text" name="name" :value="old('name')" autofocus placeholder="name" />
                     </div>
 
                     <!-- Email Address -->
@@ -32,7 +32,7 @@
                         </span>
                         <x-input id="email"
                             class="block w-full border-none border-b-2 focus:border-blue-500 focus:outline-none bg-transparent"
-                            type="email" name="email" :value="old('email')" required autofocus placeholder="Email" />
+                            type="email" name="email" :value="old('email')" placeholder="Email" />
                     </div>
 
                     <!-- Password -->
@@ -42,7 +42,7 @@
                         </span>
                         <x-input id="password"
                             class="block w-full border-none border-b-2 focus:border-blue-500 focus:outline-none bg-transparent"
-                            type="password" name="password" required autocomplete="current-password"
+                            type="password" name="password" autocomplete="current-password"
                             placeholder="Password" />
                     </div>
 
