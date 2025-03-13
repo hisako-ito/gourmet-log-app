@@ -1,14 +1,9 @@
-@section('css')
-<link rel="stylesheet" href="{{ asset('/css/navigation.css')  }}">
-@endsection
-
-
 <nav class="bg-gray-100">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex h-16">
-            <div class="flex items-center">
+        <div class="flex h-16 justify-between py-2">
+            <div class="flex">
                 <div x-data="{ open: false }">
-                    <button @click="open = !open" class="bg-blue-600 text-white focus:outline-none rounded-md shadow-md w-24 p-2">
+                    <button @click="open = !open" class="bg-blue-600 text-white focus:outline-none rounded-md shadow-md w-12 p-4">
                         <i x-show="!open" class="fa-solid fa-bars"></i>
                         <i x-show="open" class="fa-solid fa-xmark"></i>
                     </button>
@@ -22,7 +17,7 @@
                             <a href="{{ route('mypage') }}" class="block px-4 py-2 text-blue-600 hover:bg-gray-100">Mypage</a>
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
-                                <button type="submit" class="w-full text-left px-4 py-2 text-blue-600 hover:bg-gray-100">
+                                <button type="submit" class="w-full px-4 py-2 text-blue-600 hover:bg-gray-100">
                                     Logout
                                 </button>
                             </form>
@@ -41,6 +36,28 @@
                     </div>
                 </div>
             </div>
+            @if (Auth::check() && Route::is('home'))
+            <div class="flex">
+                <form class="" action="/search" method="get">
+                    @csrf
+                    <select name="area_id" class="border border-gray-300 rounded px-2 py-1 text-sm">
+                        <option value="">All area</option>
+                        @foreach ($areas as $area)
+                        <option value="{{ $area->id }}" {{ request('area_id') == $area->id ? 'selected' : '' }}>{{ $area->name }}</option>
+                        @endforeach
+                    </select>
+                    <select name="category_id" class="border border-gray-300 rounded px-4 py-1 text-sm">
+                        <option value="">All genre</option>
+                        @foreach ($categories as $category)
+                        <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>{{ $category->content }}</option>
+                        @endforeach
+
+                    </select>
+                    <input class="" type="text" name="keyword" placeholder="Search..." value="{{request('keyword')}}" class="border border-gray-300 rounded px-3 py-1 text-sm">
+                    <input class="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600 text-sm" type="submit" value="検索">
+                </form>
+            </div>
+            @endif
         </div>
     </div>
 </nav>
