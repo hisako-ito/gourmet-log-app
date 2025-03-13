@@ -23,7 +23,10 @@ Route::middleware(['auth'])->group(function () {
         return view('thanks');
     });
     Route::get('/', [ShopController::class, 'index'])->name('home');
-    Route::get('/detail/{shop_id}', [ShopController::class, 'index'])->name('detail');
+    Route::get('/search', [ShopController::class, 'search']);
+    Route::get('/detail/{shop_id}', [ShopController::class, 'detail'])->name('detail');
+    Route::post('/detail/{shop_id}', [ShopController::class, 'store'])->name('reservations.store');
+    Route::get('/test', [ShopController::class, 'test'])->name('test');
     Route::get('/mypage', [ShopController::class, 'index'])->name('mypage');
 });
 
