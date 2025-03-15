@@ -4,10 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Shop;
-use App\Models\Area;
-use App\Models\Category;
-use Illuminate\Pagination\Paginator;
-use Illuminate\Pagination\LengthAwarePaginator;
+use App\Models\Reservation;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\ReservationRequest;
 
 class ShopController extends Controller
 {
@@ -52,8 +51,21 @@ class ShopController extends Controller
         return view('detail', compact('shop'));
     }
 
-    public function test()
+    public function store(ReservationRequest $request)
     {
-        return view('test');
+        Reservation::create([
+            'shop_id' => $request->id,
+            'user_id' => Auth::id(),
+            'date' => $request->date,
+            'time' => $request->time,
+            'number' => $request->number,
+        ]);
+
+        return redirect()->route('done')->withInput();
+    }
+
+    public function done(Request $request)
+    {
+        return view('done');
     }
 }

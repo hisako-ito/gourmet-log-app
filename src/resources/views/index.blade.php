@@ -10,7 +10,13 @@
                         <p class="text-sm text-gray-600">#{{ $shop->category->content }} #{{ $shop->area->name }}</p>
                         <div class="mt-4 flex justify-between items-center">
                             <a href="/detail/{{ $shop->id }}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">詳しく見る</a>
-                            <button><i class="fa-solid fa-heart"></i></button>
+                            <div class="item__form">
+                                <form action="{{ $shop->liked() ? '/shop/unlike/'.$shop->id : '/shop/like/'.$shop->id  }}" method="post" class="" id="like__form">
+                                    @csrf
+                                    <button><i class="fa-2xl fa-heart {{ $shop->liked() ? 'fa-sharp fa-solid text-red-500' : 'fa-sharp fa-solid text-gray-300' }}"></i></button>
+                                    <p class="text-center">{{$shop->likeCount()}}</p>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>

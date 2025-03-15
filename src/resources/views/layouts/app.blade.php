@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
     <link href="{{ asset('css/output.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ mix('css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/common.css')}}">
+    @yield('css')
 </head>
 
 <body class="font-sans antialiased">
@@ -24,5 +26,6 @@
         </main>
     </div>
 </body>
+@yield('script')
 
 </html>
