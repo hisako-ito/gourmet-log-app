@@ -1,5 +1,5 @@
 <nav class="bg-gray-100">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto px-6 sm:px-6 lg:px-8">
         <div class="flex h-16 justify-between py-2">
             <div class="flex">
                 <div x-data="{ open: false }">
@@ -11,7 +11,10 @@
                     <div x-show="open" @click.away="open = false"
                         x-transition.opacity
                         class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
-                        <div class="bg-white w-3/4 md:w-1/3 rounded-lg shadow-lg text-center">
+                        <div class="bg-white w-3/4 md:w-1/3 rounded-lg shadow-lg text-center py-6 relative">
+                            <div class="absolute top-2 left-2">
+                                <a href="#" @click="open = false" class="close-btn bg-blue-600 text-white text-xl font-bold p-2">×</a>
+                            </div>
                             <a href="{{ route('home') }}" class="block px-4 py-2 text-blue-600 hover:bg-gray-100">Home</a>
                             @auth
                             <a href="{{ route('mypage') }}" class="block px-4 py-2 text-blue-600 hover:bg-gray-100">Mypage</a>
@@ -36,7 +39,7 @@
                     </div>
                 </div>
             </div>
-            @if (Auth::check() && Route::is('home'))
+            @if (Auth::check() && Route::is('home','search'))
             <div class="flex">
                 <form class="" action="/search" method="get">
                     @csrf

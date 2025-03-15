@@ -1,5 +1,4 @@
 <x-guest-layout>
-    @include('layouts.navigation')
     <div class="flex min-h-screen bg-gray-100 justify-center items-center px-4">
         <div class="w-full max-w-md">
             <div class="relative bg-white shadow-md rounded-md">

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Shop extends Model
 {
@@ -35,5 +36,20 @@ class Shop extends Model
     public function area()
     {
         return $this->belongsTo(Area::class);
+    }
+
+    public function likes()
+    {
+        return $this->hasMany(Like::class);
+    }
+
+    public function liked()
+    {
+        return Like::where(['shop_id' => $this->id, 'user_id' => Auth::id()])->exists();
+    }
+
+    public function likeCount()
+    {
+        return Like::where('shop_id', $this->id)->count();
     }
 }
