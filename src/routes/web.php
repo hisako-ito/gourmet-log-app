@@ -32,6 +32,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/detail/{shop_id}', [ShopController::class, 'store'])->name('reservations.store');
     Route::get('/done', [ShopController::class, 'done'])->name('done');
     Route::get('/mypage', [UserController::class, 'showMyPage'])->name('mypage');
+    Route::post('/reservation/delete/{reservation_id}', [UserController::class, 'destroy']);
+    Route::post('/reservation/update/{reservation_id}', [UserController::class, 'update']);
 });
 
 require __DIR__ . '/auth.php';
