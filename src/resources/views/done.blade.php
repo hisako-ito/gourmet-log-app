@@ -1,4 +1,5 @@
 <x-app-layout>
+    @section('title','予約完了')
     <div class="py-12 px-6">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="flex min-h-screen bg-gray-100 justify-center items-center px-4">

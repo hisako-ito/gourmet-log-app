@@ -64,7 +64,7 @@ class ShopController extends Controller
         return redirect()->route('done')->withInput();
     }
 
-    public function done(Request $request)
+    public function done()
     {
         return view('done');
     }

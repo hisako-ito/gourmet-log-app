@@ -1,10 +1,13 @@
 <x-app-layout>
-    <div class="py-12 px-6">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+    @section('title','予約詳細')
+    <div class="py-4 px-4">
+        <div class="max-w-7xl mx-auto">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
-                    <a href="{{ route('home') }}" class="text-xl font-bold inline-block"><button class="bg-white p-4 mb-4 shadow-md">
-                        </button></a><span class="font-bold inline-block">{{ $shop->name }}</span>
+                    <div class="flex items-center">
+                        <a href="{{ route('home') }}" class="text-xl font-bold inline-block"><button class="bg-white mb-4 shadow-md">
+                            </button></a><span class="font-bold inline-block">{{ $shop->name }}</span>
+                    </div>
                     <img src="{{ asset($shop->image) }}" alt="店舗画像" class="w-full h-[300px] object-cover rounded shadow-md mb-4" />
                     <p class="text-gray-700 mb-2">#{{ $shop->area->name }} #{{ $shop->category->content }}</p>
                     <p class="text-gray-800 leading-relaxed">{{ $shop->description }}</p>
