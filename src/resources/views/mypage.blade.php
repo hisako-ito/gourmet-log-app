@@ -1,10 +1,10 @@
 <x-app-layout>
     @section('title','マイページ')
-    <div class="py-4 px-4">
+    <div class="p-4">
         <div class="max-w-7xl mx-auto">
             <div class="">
                 @if (session('message'))
-                <div class="bg-white text-black p-4 text-xl font-bold">
+                <div class="bg-white text-black p-4 text-xl font-bold mb-4">
                     {{ session('message') }}
                 </div>
                 @endif

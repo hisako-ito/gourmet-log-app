@@ -1,6 +1,6 @@
 <x-app-layout>
-    @section('title','サンクスページ')
-    <div class="flex min-h-screen bg-gray-100 justify-center items-center px-4">
+    @section('title','会員登録案内')
+    <div class="flex min-h-screen bg-gray-100 justify-center items-center p-4">
         <div class="w-full max-w-md">
             <div class="bg-white shadow-md rounded-md p-8">
                 <h2 class="text-center text-xl font-bold mb-6">会員登録ありがとうございます</h2>
