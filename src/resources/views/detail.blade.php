@@ -4,9 +4,9 @@
         <div class="max-w-7xl mx-auto">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
-                    <div class="flex items-center">
-                        <a href="{{ route('home') }}" class="text-xl font-bold inline-block"><button class="bg-white mb-4 shadow-md">
-                            </button></a><span class="font-bold inline-block">{{ $shop->name }}</span>
+                    <div class="flex items-center mb-4">
+                        <a href="{{ route('home') }}" class="mr-2">
+                            <button class="bg-white text-xl px-3 py-1 rounded shadow-md"><i class="fa-solid fa-chevron-left"></i></button></a><span class="text-xl font-bold">{{ $shop->name }}</span>
                     </div>
                     <img src="{{ asset($shop->image) }}" alt="店舗画像" class="w-full h-[300px] object-cover rounded shadow-md mb-4" />
                     <p class="text-gray-700 mb-2">#{{ $shop->area->name }} #{{ $shop->category->content }}</p>
@@ -27,26 +27,28 @@
                                     @enderror
                                 </p>
                             </div>
-                            <div>
+                            <div class="relative sm:w-auto h-10">
                                 <select name="time" class="w-full p-2 text-black rounded block" value="{{request('time')}}">
                                     <option value=""></option>
                                     @for ($i = 0; $i <= 24; $i++)
                                         <option value="{{ $i }}:00">{{ $i }}:00</option>
                                         @endfor
                                 </select>
+                                <span class="pointer-events-none absolute right-2 inset-y-0 flex items-center text-gray-500">▼</span>
                                 <p class="">
                                     @error('time')
                                     {{ $message }}
                                     @enderror
                                 </p>
                             </div>
-                            <div>
+                            <div class="relative sm:w-auto h-10">
                                 <select name="number" class="w-full p-2 text-black rounded block" value="{{request('number')}}">
                                     <option value=""></option>
                                     @for ($i = 1; $i <= 10; $i++)
                                         <option value="{{ $i }}">{{ $i }}人</option>
                                         @endfor
                                 </select>
+                                <span class="pointer-events-none absolute right-2 inset-y-0 flex items-center text-gray-500">▼</span>
                                 <p class="">
                                     @error('number')
                                     {{ $message }}
@@ -60,7 +62,7 @@
                                 <p><strong>Time</strong>: <span id="selected-time">未選択</span></p>
                                 <p><strong>Number</strong>: <span id="selected-number">未選択</span></p>
                             </div>
-                            <button type="submit" class="mt-4 w-full bg-blue-800 hover:bg-blue-900 py-2 rounded">予約する</button>
+                            <button type="submit" class="mt-4 w-full bg-blue-600 hover:bg-blue-900 py-2 rounded">予約する</button>
                         </form>
                     </div>
                 </div>
