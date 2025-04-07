@@ -19,9 +19,18 @@ class ReservationsTableSeeder extends Seeder
         $param = [
             'shop_id' => 1,
             'user_id' => 1,
-            'date' => Carbon::now()->addDays(3)->toDateString(),,
+            'date' => Carbon::now()->addDays(3)->toDateString(),
             'time' => '19:00:00',
             'number' => 2,
+        ];
+        Reservation::create($param);
+
+        $param = [
+            'shop_id' => 2,
+            'user_id' => 2,
+            'date' => Carbon::now()->addDays(3)->toDateString(),
+            'time' => '20:00:00',
+            'number' => 3,
         ];
         Reservation::create($param);
     }

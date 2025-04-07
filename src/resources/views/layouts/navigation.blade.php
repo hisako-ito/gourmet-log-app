@@ -16,9 +16,28 @@
                                 <a href="#" @click="open = false" class="close-btn text-white text-xl font-bold p-2 ">×</a>
                             </div>
                             <a href="{{ route('home') }}" class="block px-4 py-2 text-blue-600 hover:bg-gray-100">Home</a>
-                            @auth
+                            @if (Auth::guard('web')->check())
                             <a href="{{ route('mypage') }}" class="block px-4 py-2 text-blue-600 hover:bg-gray-100">Mypage</a>
                             <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" class="w-full px-4 py-2 text-blue-600 hover:bg-gray-100">
+                                    Logout
+                                </button>
+                            </form>
+                            @elseif (Auth::guard('owner')->check())
+                            @php
+                            $owner = Auth::guard('owner')->user();
+                            @endphp
+                            <a href="{{ route('owner.page') }}" class="block px-4 py-2 text-blue-600 hover:bg-gray-100">Mypage</a>
+                            <form method="POST" action="{{ route('owner.logout') }}">
+                                @csrf
+                                <button type="submit" class="w-full px-4 py-2 text-blue-600 hover:bg-gray-100">
+                                    Logout
+                                </button>
+                            </form>
+                            @elseif (Auth::guard('admin')->check())
+                            <a href="{{ route('admin.page') }}" class="block px-4 py-2 text-blue-600 hover:bg-gray-100">Mypage</a>
+                            <form method="POST" action="{{ route('admin.logout') }}">
                                 @csrf
                                 <button type="submit" class="w-full px-4 py-2 text-blue-600 hover:bg-gray-100">
                                     Logout
@@ -27,7 +46,7 @@
                             @else
                             <a href="{{ route('register') }}" class="block px-4 py-2 text-blue-600 hover:bg-gray-100">Register</a>
                             <a href="{{ route('login') }}" class="block px-4 py-2 text-blue-600 hover:bg-gray-100">Login</a>
-                            @endauth
+                            @endif
                         </div>
                     </div>
                 </div>

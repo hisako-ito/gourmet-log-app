@@ -58,5 +58,9 @@
     "Verify Email Address": "メールアドレスを確認してください",
     "Verify Your Email Address": "メールアドレスの確認",
     "Whoops!": "おっと！",
-    "You are receiving this email because we received a password reset request for your account.": "パスワード再設定のリクエストを受け付けました。"
+    "You are receiving this email because we received a password reset request for your account.": "パスワード再設定のリクエストを受け付けました。",
+    "Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you? If you didn't receive the email, we will gladly send you another.": "ご登録ありがとうございます！ご利用を開始する前に、メールアドレスの確認をお願いいたします。確認用リンクをメールでお送りしましたので、クリックして認証してください。もし届いていない場合は、再送も可能です。",
+    "A new verification link has been sent to the email address you provided during registration.": "新しい確認リンクを登録時のメールアドレスに送信しました。",
+    "Resend Verification Email": "確認メールを再送する",
+    "Log Out": "ログアウト"
 }
