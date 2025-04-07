@@ -12,6 +12,7 @@
                     <p class="text-gray-700 mb-2">#{{ $shop->area->name }} #{{ $shop->category->content }}</p>
                     <p class="text-gray-800 leading-relaxed">{{ $shop->description }}</p>
                 </div>
+                @if (Auth::guard('web')->check())
                 <div class="bg-blue-600 text-white rounded-lg shadow-lg p-6 flex flex-col justify-between">
                     <div class="">
                         <h3 class="text-xl font-bold mb-4">予約</h3>
@@ -27,7 +28,7 @@
                                     @enderror
                                 </p>
                             </div>
-                            <div class="relative sm:w-auto h-10">
+                            <div class="relative">
                                 <select name="time" class="w-full p-2 text-black rounded block" value="{{request('time')}}">
                                     <option value=""></option>
                                     @for ($i = 0; $i <= 24; $i++)
@@ -41,7 +42,7 @@
                                     @enderror
                                 </p>
                             </div>
-                            <div class="relative sm:w-auto h-10">
+                            <div class="relative">
                                 <select name="number" class="w-full p-2 text-black rounded block" value="{{request('number')}}">
                                     <option value=""></option>
                                     @for ($i = 1; $i <= 10; $i++)
@@ -66,6 +67,7 @@
                         </form>
                     </div>
                 </div>
+                @endif
             </div>
         </div>
     </div>

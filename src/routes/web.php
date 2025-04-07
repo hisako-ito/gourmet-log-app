@@ -16,11 +16,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/thanks', function () {
-    return view('thanks');
-});
-
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth:admin,owner,web', 'verified'])->group(function () {
     Route::get('/thanks', function () {
         return view('thanks');
     });

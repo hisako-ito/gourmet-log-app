@@ -52,4 +52,9 @@ class Shop extends Model
     {
         return Like::where('shop_id', $this->id)->count();
     }
+
+    public function owner()
+    {
+        return $this->belongsTo(Owner::class);
+    }
 }
