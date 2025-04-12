@@ -14,6 +14,7 @@ class UserController extends Controller
         $user = Auth::user();
         $reservations = Reservation::with('shop')
             ->where('user_id', $user->id)
+            ->orderBy('date', 'asc')
             ->get();
 
         $shops = $user->likes()->get()->pluck('shop');

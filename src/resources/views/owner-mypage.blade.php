@@ -11,7 +11,18 @@
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="flex flex-col gap-6">
-                    <h2 class="text-xl font-bold">{{ $shop->name }}様の予約状況</h2>
+                    <h2 class="text-xl font-bold">{{ $owner->name }}様の店舗の予約状況</h2>
+                    <form id="shopSelectForm">
+                        <label for="shopSelect">店舗を選択:</label>
+                        <select id="shopSelect" name="shop_id">
+                            <option class="text-center" value="" disabled>-- 店舗を選択 --</option>
+                            @foreach($shops as $shop)
+                            <option value="{{ $shop->id }}" {{ (isset($shop_id) && $shop_id == $shop->id) ? 'selected' : '' }}>
+                                {{ $shop->name }}
+                            </option>
+                            @endforeach
+                        </select>
+                    </form>
                     @forelse ($reservations as $index => $reservation)
                     <table class="bg-blue-600 text-white rounded-lg shadow-md">
                         <tr class="px-4 pt-4 flex justify-between">
@@ -55,7 +66,7 @@
                                     <input type="text" class="w-full" name="name" id="name" value="{{ old('name') }}">
                                 </div>
                             </div>
-                            <div class="form__error">
+                            <div class="text-red-500">
                                 @error('name')
                                 {{ $message }}
                                 @enderror
@@ -66,14 +77,14 @@
                                 <label class="font-bold">店舗画像</label>
                             </div>
                             <div class="relative" id="imagePreview">
-                                <span class="hidden absolute top-2 left-2" id="close-btn">×</span>
+                                <div class="absolute top-2 left-2 rounded-full bg-white"><span class="hidden w-6 h-6 text-black cursor-pointer text-center" id="close-btn">×</span></div>
                                 <img class="hidden w-full" src="#" alt="店舗画像" id="previewImage">
                             </div>
                             <div class="flex items-center justify-center border border-dotted border-blue-600 py-4">
                                 <label for="image-input" class="inline-block px-4 py-2 bg-blue-600 text-white rounded cursor-pointer hover:bg-blue-700">画像を選択する</label>
                                 <input class="hidden" type="file" name="image" id="image-input" accept="image/*">
                             </div>
-                            <div class="form__error">
+                            <div class="text-red-500">
                                 @error('image')
                                 {{ $message }}
                                 @enderror
@@ -84,22 +95,16 @@
                                 <label class="font-bold">カテゴリー</label>
                             </div>
                             <div class="">
-                                <select class="w-full" id="exhibition-form__select" name="category">
+                                <select class="w-full" name="category_id">
                                     <option class="text-center" value="" disabled selected>-- カテゴリーを選択 --</option>
-                                    <option value="1" {{
-                old('category') == 1 ? 'selected' : '' }}>寿司</option>
-                                    <option value="2" {{
-                old('category') == 2 ? 'selected' : '' }}>焼肉</option>
-                                    <option value="3" {{
-                old('category') == 3 ? 'selected' : '' }}>居酒屋</option>
-                                    <option value="4" {{
-                old('category') == 4 ? 'selected' : '' }}>イタリアン</option>
-                                    <option value="5" {{
-                old('category') == 4 ? 'selected' : '' }}>ラーメン</option>
+                                    @foreach($categories as $category)
+                                    <option class="" value="{{ $category->id }}" {{
+                old('category_id') == $category->id ? 'selected' : '' }}>{{ $category->content }}</option>
+                                    @endforeach
                                 </select>
                             </div>
-                            <div class="form__error">
-                                @error('category')
+                            <div class="text-red-500">
+                                @error('category_id')
                                 {{ $message }}
                                 @enderror
                             </div>
@@ -109,106 +114,16 @@
                                 <label class="font-bold">エリア</label>
                             </div>
                             <div class="">
-                                <select class="w-full" id="exhibition-form__select" name="area">
+                                <select class="w-full" name="area_id">
                                     <option class="text-center" value="" disabled selected>-- エリアを選択 --</option>
-                                    <option value="1" {{
-                old('category') == 1 ? 'selected' : '' }}>北海道</option>
-                                    <option value="2" {{
-                old('category') == 2 ? 'selected' : '' }}>青森県</option>
-                                    <option value="3" {{
-                old('category') == 3 ? 'selected' : '' }}>岩手県</option>
-                                    <option value="4" {{
-                old('category') == 4 ? 'selected' : '' }}>宮城県</option>
-                                    <option value="5" {{
-                old('category') == 5 ? 'selected' : '' }}>秋田県</option>
-                                    <option value="6" {{
-                old('category') == 6 ? 'selected' : '' }}>山形県</option>
-                                    <option value="7" {{
-                old('category') == 7 ? 'selected' : '' }}>福島県</option>
-                                    <option value="8" {{
-                old('category') == 8 ? 'selected' : '' }}>茨城県</option>
-                                    <option value="9" {{
-                old('category') == 9 ? 'selected' : '' }}>栃木県</option>
-                                    <option value="10" {{
-                old('category') == 10 ? 'selected' : '' }}>群馬県</option>
-                                    <option value="11" {{
-                old('category') == 11 ? 'selected' : '' }}>埼玉県</option>
-                                    <option value="12" {{
-                old('category') == 12 ? 'selected' : '' }}>千葉県</option>
-                                    <option value="13" {{
-                old('category') == 13 ? 'selected' : '' }}>東京都</option>
-                                    <option value="14" {{
-                old('category') == 14 ? 'selected' : '' }}>神奈川県</option>
-                                    <option value="15" {{
-                old('category') == 15 ? 'selected' : '' }}>新潟県</option>
-                                    <option value="16" {{
-                old('category') == 16 ? 'selected' : '' }}>富山県</option>
-                                    <option value="17" {{
-                old('category') == 17 ? 'selected' : '' }}>石川県</option>
-                                    <option value="18" {{
-                old('category') == 18 ? 'selected' : '' }}>福井県</option>
-                                    <option value="19" {{
-                old('category') == 19 ? 'selected' : '' }}>山梨県</option>
-                                    <option value="20" {{
-                old('category') == 20 ? 'selected' : '' }}>長野県</option>
-                                    <option value="21" {{
-                old('category') == 21 ? 'selected' : '' }}>岐阜県</option>
-                                    <option value="22" {{
-                old('category') == 22 ? 'selected' : '' }}>静岡県</option>
-                                    <option value="23" {{
-                old('category') == 23 ? 'selected' : '' }}>愛知県</option>
-                                    <option value="24" {{
-                old('category') == 24 ? 'selected' : '' }}>三重県</option>
-                                    <option value="25" {{
-                old('category') == 25 ? 'selected' : '' }}>滋賀県</option>
-                                    <option value="26" {{
-                old('category') == 26 ? 'selected' : '' }}>京都府</option>
-                                    <option value="27" {{
-                old('category') == 27 ? 'selected' : '' }}>大阪府</option>
-                                    <option value="28" {{
-                old('category') == 28 ? 'selected' : '' }}>兵庫県</option>
-                                    <option value="29" {{
-                old('category') == 29 ? 'selected' : '' }}>奈良県</option>
-                                    <option value="30" {{
-                old('category') == 30 ? 'selected' : '' }}>和歌山県</option>
-                                    <option value="31" {{
-                old('category') == 31 ? 'selected' : '' }}>鳥取県</option>
-                                    <option value="32" {{
-                old('category') == 32 ? 'selected' : '' }}>島根県</option>
-                                    <option value="33" {{
-                old('category') == 33 ? 'selected' : '' }}>岡山県</option>
-                                    <option value="34" {{
-                old('category') == 34 ? 'selected' : '' }}>広島県</option>
-                                    <option value="35" {{
-                old('category') == 35 ? 'selected' : '' }}>山口県</option>
-                                    <option value="36" {{
-                old('category') == 36 ? 'selected' : '' }}>徳島県</option>
-                                    <option value="37" {{
-                old('category') == 37 ? 'selected' : '' }}>香川県</option>
-                                    <option value="38" {{
-                old('category') == 38 ? 'selected' : '' }}>愛媛県</option>
-                                    <option value="39" {{
-                old('category') == 39 ? 'selected' : '' }}>高知県</option>
-                                    <option value="40" {{
-                old('category') == 40 ? 'selected' : '' }}>福岡県</option>
-                                    <option value="41" {{
-                old('category') == 41 ? 'selected' : '' }}>佐賀県</option>
-                                    <option value="42" {{
-                old('category') == 42 ? 'selected' : '' }}>長崎県</option>
-                                    <option value="43" {{
-                old('category') == 43 ? 'selected' : '' }}>熊本県</option>
-                                    <option value="44" {{
-                old('category') == 44 ? 'selected' : '' }}>大分県</option>
-                                    <option value="45" {{
-                old('category') == 45 ? 'selected' : '' }}>宮崎県</option>
-                                    <option value="46" {{
-                old('category') == 46 ? 'selected' : '' }}>鹿児島県</option>
-                                    <option value="47" {{
-                old('category') == 47 ? 'selected' : '' }}>沖縄県</option>
+                                    @foreach($areas as $area)
+                                    <option class="" value="{{ $area->id }}" {{
+                old('area_id') == $area->id ? 'selected' : '' }}>{{ $area->name }}</option>
+                                    @endforeach
                                 </select>
                             </div>
-                            <div class="form__error">
-                                @error('category')
+                            <div class="text-red-500">
+                                @error('area_id')
                                 {{ $message }}
                                 @enderror
                             </div>
@@ -222,7 +137,7 @@
                                     <textarea class="w-full" type="text" name="description" id="description" cols="30" rows="10">{{ old('description') }}</textarea>
                                 </div>
                             </div>
-                            <div class="form__error">
+                            <div class="text-red-500">
                                 @error('description')
                                 {{ $message }}
                                 @enderror
@@ -278,6 +193,12 @@
                     closeBtn.style.display = "none";
                     imagePreview.style.display = "none";
                     imageInput.value = "";
+                });
+            </script>
+            <script>
+                document.getElementById('shopSelect').addEventListener('change', function() {
+                    const shopId = this.value;
+                    window.location.href = `/owner/mypage/${shopId}`;
                 });
             </script>
             @endsection

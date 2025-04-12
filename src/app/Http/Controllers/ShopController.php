@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Shop;
+use App\Models\Category;
+use App\Models\Area;
 use App\Models\Reservation;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\ReservationRequest;
@@ -47,8 +49,11 @@ class ShopController extends Controller
 
     public function detail($shop_id, Request $request)
     {
-        $shop = Shop::with('category', 'area')->find($shop_id);
-        return view('detail', compact('shop'));
+        $shop = Shop::with('category', 'area', 'owner')->find($shop_id);
+        $owner = Auth::guard('owner')->user();
+        $categories = Category::all();
+        $areas = Area::all();
+        return view('detail', compact('shop', 'categories', 'areas', 'owner'));
     }
 
     public function store(ReservationRequest $request)

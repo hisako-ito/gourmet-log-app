@@ -17,5 +17,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware(['auth:owner', 'verified'])->group(function () {
-    Route::get('/owner/mypage', [OwnerController::class, 'showOwnerMyPage'])->name('owner.page');
+    Route::get('/owner/mypage/{shop_id?}', [OwnerController::class, 'ownerMyPageShow'])->name('owner.page');
+    Route::post('/owner/mypage', [OwnerController::class, 'shopStore'])->name('owner.page');
+    Route::patch('/detail/{shop_id}', [OwnerController::class, 'shopUpdate'])->name('shop.update');
 });
