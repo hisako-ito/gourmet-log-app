@@ -25,9 +25,6 @@
                                 </button>
                             </form>
                             @elseif (Auth::guard('owner')->check())
-                            @php
-                            $owner = Auth::guard('owner')->user();
-                            @endphp
                             <a href="{{ route('owner.page') }}" class="block px-4 py-2 text-blue-600 hover:bg-gray-100">Mypage</a>
                             <form method="POST" action="{{ route('owner.logout') }}">
                                 @csrf

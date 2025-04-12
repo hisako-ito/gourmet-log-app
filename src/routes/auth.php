@@ -10,7 +10,11 @@ use App\Http\Controllers\Auth\User\NewPasswordController;
 use App\Http\Controllers\Auth\User\PasswordResetLinkController;
 use App\Http\Controllers\Auth\User\RegisteredUserController;
 use App\Http\Controllers\Auth\User\VerifyEmailController;
+use App\Http\Controllers\Auth\Owner\OwnerEmailVerificationNotificationController;
+use App\Http\Controllers\Auth\Owner\OwnerEmailVerificationPromptController;
+use App\Http\Controllers\Auth\Owner\OwnerVerifyEmailController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AdminController;
 
 Route::middleware('guest')->group(function () {
     Route::get('register', [RegisteredUserController::class, 'create'])
@@ -63,6 +67,10 @@ Route::middleware('auth:web', 'verified')->group(function () {
         ->name('logout');
 });
 
+Route::get('owner/verify-email/{id}/{hash}', [OwnerVerifyEmailController::class, '__invoke'])
+    ->middleware(['signed', 'throttle:6,1'])
+    ->name('owner.verification.verify');
+
 Route::middleware('auth:owner', 'verified')->group(function () {
     Route::post('owner/logout', [OwnerAuthenticatedSessionController::class, 'ownerDestroy'])
         ->name('owner.logout');
@@ -71,4 +79,5 @@ Route::middleware('auth:owner', 'verified')->group(function () {
 Route::middleware('auth:admin', 'verified')->group(function () {
     Route::post('admin/logout', [AdminAuthenticatedSessionController::class, 'adminDestroy'])
         ->name('admin.logout');
+    Route::post('admin/mypage', [AdminController::class, 'ownerStore']);
 });

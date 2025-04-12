@@ -11,7 +11,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 @foreach ($shops as $shop)
                 <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                    <img src="{{ asset($shop->image) }}" alt="店舗画像" class="w-full h-48 object-cover" />
+                    <img src="{{ asset('storage/' . $shop->image) }}" alt="店舗画像" class="w-full h-48 object-cover" />
                     <div class="p-4">
                         <p class="text-lg font-semibold">{{ $shop->name }}</p>
                         <p class="text-sm text-gray-600">#{{ $shop->category->content }} #{{ $shop->area->name }}</p>

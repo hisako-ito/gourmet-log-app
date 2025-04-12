@@ -32,7 +32,7 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(RegisterRequest $request)
+    public function ownerStore(RegisterRequest $request)
     {
         $validated = $request->validated();
 

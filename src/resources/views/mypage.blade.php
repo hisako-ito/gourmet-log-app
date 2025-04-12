@@ -73,12 +73,12 @@
                 </div>
 
                 <div class="flex flex-col gap-4">
-                    <h3 class=" text-xl font-bold">{{ $user->name }}さん</h3>
-                    <p class="font-bold">お気に入り店舗</p>
+                    <h3 class="text-xl font-bold">{{ $user->name }}さん</h3>
+                    <h4 class="text-lg font-bold">お気に入り店舗</h4>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         @foreach ($shops as $shop)
                         <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                            <img src="{{ asset($shop->image) }}" alt="{{ $shop->name }}" class="w-full h-48 object-cover" />
+                            <img src="{{ asset('storage/' . $shop->image) }}" alt="{{ $shop->name }}" class="w-full h-48 object-cover" />
                             <div class="p-4">
                                 <p class="text-lg font-semibold">{{ $shop->name }}</p>
                                 <p class="text-sm text-gray-600">#{{ $shop->category->content }} #{{ $shop->area->name }}</p>

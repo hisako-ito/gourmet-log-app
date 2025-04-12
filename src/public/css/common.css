@@ -24,3 +24,9 @@ input {
     -moz-appearance: none;
     appearance: none;
 }
+
+textarea {
+    resize: none;
+    height: 125px;
+    overflow-y: scroll;
+}
