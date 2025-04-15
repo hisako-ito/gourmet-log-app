@@ -43,10 +43,17 @@ class OwnerController extends Controller
         $shop->category_id = $request->category_id;
         $shop->area_id = $request->area_id;
 
-        $fileName = $request->file('image')->getClientOriginalName();
-        $request->file('image')->storeAs('storage/shop_images', $fileName, 'public');
+        $file = $request->file('image');
+        $fileName = $file->getClientOriginalName();
+
+        $file = $request->file('image');
+        $fileName = $file->getClientOriginalName();
+        $file->move(public_path('storage/shop_images'), $fileName);
+
         $shop->image = 'storage/shop_images/' . $fileName;
+
         $shop->save();
+
 
         return redirect()->route('owner.page')->with('message', '店舗を登録しました');
     }
@@ -59,10 +66,13 @@ class OwnerController extends Controller
 
         if ($request->hasFile('image')) {
             if ($shop->image) {
-                Storage::disk('public')->delete($shop->image);
+                Storage::disk('public')->delete(str_replace('storage/', '', $shop->image));
             };
-            $fileName = $request->file('image')->getClientOriginalExtension();
-            $imagePath = $request->file('image')->storeAs('storage/shop_images', $fileName, 'public');
+            $file = $request->file('image');
+            $fileName = $file->getClientOriginalName();
+            $file->move(public_path('storage/shop_images'), $fileName);
+
+            $imagePath = 'storage/shop_images/' . $fileName;
         }
 
         $shop->update([
