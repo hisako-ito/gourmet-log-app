@@ -16,7 +16,7 @@
                         <a href="{{ route('home') }}" class="mr-2">
                             <button class="bg-white text-xl px-3 py-1 rounded shadow-md"><i class="fa-solid fa-chevron-left"></i></button></a><span class="text-xl font-bold">{{ $shop->name }}</span>
                     </div>
-                    <img src="{{ asset('storage/' . $shop->image) }}" alt="店舗画像" class="w-full h-[300px] object-cover rounded shadow-md mb-4" />
+                    <img src="{{ asset($shop->image) }}" alt="店舗画像" class="w-full h-[300px] object-cover rounded shadow-md mb-4" />
                     <p class="text-gray-700 mb-2">#{{ $shop->area->name }} #{{ $shop->category->content }}</p>
                     <p class="text-gray-800 leading-relaxed">{{ $shop->description }}</p>
                 </div>
@@ -29,46 +29,46 @@
                             <div>
                                 <input type="date" name="date" style="color: black;" class="p-2 rounded block"
                                     value="{{ old('date', request('date')) }}">
-                                <p class="">
-                                    @error('date')
-                                    {{ $message }}
-                                    @enderror
-                                </p>
+                            </div>
+                            <div>
+                                @error('date')
+                                {{ $message }}
+                                @enderror
                             </div>
                             <div class="relative">
-                                <select name="time" class="w-full p-2 text-black rounded block" value="{{request('time')}}">
-                                    <option value=""></option>
+                                <select name="time" class="w-full p-2 text-black rounded block">
+                                    <option value="" disabled selected>-- 時間を選択 --</option>
                                     @for ($i = 0; $i <= 24; $i++)
-                                        <option value="{{ $i }}:00">{{ $i }}:00</option>
+                                        <option value="{{ $i }}:00" {{ old('time') == $i . ':00' ? 'selected' : '' }}>{{ $i }}:00</option>
                                         @endfor
                                 </select>
                                 <span class="pointer-events-none absolute right-2 inset-y-0 flex items-center text-gray-500">▼</span>
-                                <p class="">
-                                    @error('time')
-                                    {{ $message }}
-                                    @enderror
-                                </p>
+                            </div>
+                            <div>
+                                @error('time')
+                                {{ $message }}
+                                @enderror
                             </div>
                             <div class="relative">
-                                <select name="number" class="w-full p-2 text-black rounded block" value="{{request('number')}}">
-                                    <option value=""></option>
+                                <select name="number" class="w-full p-2 text-black rounded block">
+                                    <option value="" disabled selected>-- 支払い方法を選択 --</option>
                                     @for ($i = 1; $i <= 10; $i++)
-                                        <option value="{{ $i }}">{{ $i }}人</option>
+                                        <option value="{{ $i }}" {{ old('number') == $i ? 'selected' : '' }}>{{ $i }}人</option>
                                         @endfor
                                 </select>
                                 <span class="pointer-events-none absolute right-2 inset-y-0 flex items-center text-gray-500">▼</span>
-                                <p class="">
-                                    @error('number')
-                                    {{ $message }}
-                                    @enderror
-                                </p>
+                            </div>
+                            <div>
+                                @error('number')
+                                {{ $message }}
+                                @enderror
                             </div>
 
-                            <div class="bg-blue-500 p-4 rounded text-sm text-white">
-                                <p><strong>Shop</strong>: {{ $shop->name }}</p>
-                                <p><strong>Date</strong>: <span id="selected-date">未選択</span></p>
-                                <p><strong>Time</strong>: <span id="selected-time">未選択</span></p>
-                                <p><strong>Number</strong>: <span id="selected-number">未選択</span></p>
+                            <div class="bg-blue-500 p-8 rounded text-sm text-white">
+                                <p class=""><strong>Shop</strong>: {{ $shop->name }}</p>
+                                <p class="mt-2"><strong>Date</strong>: <span id="selected-date">未選択</span></p>
+                                <p class="mt-2"><strong>Time</strong>: <span id="selected-time">未選択</span></p>
+                                <p class="mt-2"><strong>Number</strong>: <span id="selected-number">未選択</span></p>
                             </div>
                             <button type="submit" class="mt-4 w-full bg-blue-600 hover:bg-blue-900 py-2 rounded">予約する</button>
                         </form>
@@ -82,7 +82,7 @@
                         <a href="{{ route('home') }}" class="mr-2">
                             <button class="bg-white text-xl px-3 py-1 rounded shadow-md"><i class="fa-solid fa-chevron-left"></i></button></a><span class="text-xl font-bold">{{ $shop->name }}</span>
                     </div>
-                    <img src="{{ asset('storage/' . $shop->image) }}" alt="店舗画像" class="w-full h-[300px] object-cover rounded shadow-md mb-4" />
+                    <img src="{{ asset($shop->image) }}" alt="店舗画像" class="w-full h-[300px] object-cover rounded shadow-md mb-4" />
                     <p class="text-gray-700 mb-2">#{{ $shop->area->name }} #{{ $shop->category->content }}</p>
                     <p class="text-gray-800 leading-relaxed">{{ $shop->description }}</p>
                 </div>
@@ -103,10 +103,8 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="">
-                            <div class="">
-                                <label class="font-bold">店舗画像</label>
-                            </div>
+                        <div class="mt-2 w-full">
+                            <label class="font-bold">店舗画像</label>
                             <div class="relative" id="imagePreview">
                                 <div class="absolute top-2 left-2 rounded-full bg-white"><span class="hidden w-6 h-6 text-black cursor-pointer text-center" id="close-btn">×</span></div>
                                 <img class="hidden w-full" src="#" alt="店舗画像" id="previewImage">

@@ -6,6 +6,7 @@ use App\Models\Reservation;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\ReservationRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -28,15 +29,28 @@ class UserController extends Controller
         return redirect()->route('mypage')->with('message', '予約を削除しました');
     }
 
-    public function update(ReservationRequest $request)
+    public function update($reservation_id, Request $request)
     {
-        $reservation = Reservation::find($request->id);
-        $reservation->update([
-            'date' => $request->date,
-            'time' => $request->time,
-            'number' => $request->number,
+        $reservation = Reservation::with('shop')->find($reservation_id);
+        $validator = Validator::make($request->all(), [
+            "date.{$reservation->id}" => 'after_or_equal:' . now()->addDay()->format('Y-m-d'),
+        ], [
+            "date.{$reservation->id}.after_or_equal" => '明日以降の日付を入力してください',
         ]);
 
-        return redirect()->route('mypage')->with('message', '予約内容を変更しました');
+        if ($validator->fails()) {
+            return redirect()
+                ->back()
+                ->withErrors($validator, 'edit_' . $reservation->id)
+                ->withInput();
+        }
+
+        $reservation->update([
+            'date' => $request->input("date.{$reservation->id}"),
+            'time' => $request->input("time.{$reservation->id}"),
+            'number' => $request->input("number.{$reservation->id}"),
+        ]);
+
+        return redirect()->route('mypage')->with('message', "{$reservation->shop->name}の予約内容を変更しました");
     }
 }

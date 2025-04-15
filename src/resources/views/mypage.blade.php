@@ -9,56 +9,84 @@
                 </div>
                 @endif
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="flex flex-col gap-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div class="flex flex-col">
                     <h2 class="text-xl font-bold">予約状況</h2>
                     @forelse ($reservations as $index => $reservation)
-                    <div class="bg-blue-600 text-white rounded-lg shadow-md p-8 relative">
-                        <form action="/reservation/delete/{{ $reservation->id }}" method="post" class="reservation-box">
-                            @csrf
-                            <div class="flex justify-between">
-                                <div class="flex items-center"><i class="fa-regular fa-clock text-xl"></i>
-                                    <span class="ml-2">
-                                        {{ $index === 0 ? '予約1' : '予約' . ($index + 1) }}</span>
-                                </div>
-                                <div class="">
+                    <div class="mt-4 px-4 pt-4 bg-blue-600 text-white rounded-lg shadow-md">
+                        <div class="flex justify-between">
+                            <div class="flex items-center text-white"><i class="fa-regular fa-clock text-xl"></i>
+                                <span class="ml-2">
+                                    {{ $index === 0 ? '予約1' : '予約' . ($index + 1) }}</span>
+                            </div>
+                            <div>
+                                <form action=" /reservation/delete/{{ $reservation->id }}" method="post" class="reservation-box">
+                                    @csrf
+                                    @method('DELETE')
                                     <button type="submit" class="close-btn text-white text-xl font-bold">
                                         <i class="fa-regular fa-circle-xmark"></i>
                                     </button>
-                                </div>
+                                    <input type="hidden" name="id" value="{{ $reservation->id }}">
+                                </form>
                             </div>
-                            <input type="hidden" name="id" value="{{ $reservation->id }}">
-                        </form>
-
+                        </div>
                         <form action="/reservation/update/{{ $reservation->id }}" method="post">
                             @csrf
-                            <input type="hidden" name="id" value="{{ $reservation->id }}">
-
-                            <div class="mt-4 flex items-center">
-                                <label class="w-24 text-sm h-10 flex items-center">Shop</label>
-                                <input class="h-10 px-3 py-[5px] text-sm border border-gray-300 rounded w-full" value="{{ $reservation->shop->name }}" readonly>
-                            </div>
-                            <div class="mt-2 flex items-center">
-                                <label class="w-24 text-sm h-10 flex items-center">Date</label>
-                                <input style="color: black;" class="h-10 px-3 py-[5px] text-sm border border-gray-300 rounded w-full" name="date" type="date" value="{{ $reservation->date }}">
-                            </div>
-                            <div class="mt-2 flex items-center">
-                                <label class="w-24 text-sm h-10 flex items-center">Time</label>
-                                <input style="color: black;" class="h-10 px-3 py-[5px] text-sm border border-gray-300 rounded w-full" name="time" value="{{ $reservation->time }}" type="time" min="17">
-                            </div>
-                            <div class="mt-2 flex items-center">
-                                <label class="w-24 text-sm h-10 flex items-center">Number</label>
-                                <div class="flex items-center h-10 w-full">
-                                    <input
-                                        style="color: black;" class="w-16 h-full px-2 text-sm border border-gray-300 rounded text-right"
-                                        name="number"
-                                        value="{{ $reservation->number }}"
-                                        type="number"
-                                        min="1">
-                                    <span class="ml-1 text-sm">人</span>
-                                </div>
-                            </div>
-                            <div class="flex justify-center mt-6">
+                            @method('PATCH')
+                            <table class="table-fixed bg-blue-600 text-white rounded-b-lg relative w-full">
+                                <tr class="">
+                                    <th class="w-24 px-4 py-2 text-left whitespace-nowrap">Shop</th>
+                                    <td class="px-4 py-2">
+                                        <input class="h-10 px-2 py-[5px] text-sm border border-gray-300 rounded w-full" value="{{ $reservation->shop->name }}" readonly>
+                                    </td>
+                                </tr>
+                                <tr class="">
+                                    <th class="w-24 px-4 py-2 text-left whitespace-nowrap">Date</th>
+                                    <td class="px-4 py-2">
+                                        <input style="color: black;" class="h-10 px-4 py-[5px] text-sm border border-gray-300 rounded w-full" type="date" name="date[{{ $reservation->id }}]" value="{{ old("date.{$reservation->id}", $reservation->date) }}">
+                                        @if ($errors->getBag('edit_' . $reservation->id)->has("date.{$reservation->id}"))
+                                        <p class="form__error">
+                                            {{ $errors->getBag('edit_' . $reservation->id)->first("date.{$reservation->id}") }}
+                                        </p>
+                                        @endif
+                                    </td>
+                                </tr>
+                                <tr class="">
+                                    <th class="w-24 px-2 py-2 text-left whitespace-nowrap">Time</th>
+                                    <td class="px-4 py-2">
+                                        <div class="relative">
+                                            <select name="time[{{ $reservation->id }}]" class="h-10 px-3 py-[5px] text-sm border border-gray-300 rounded w-full">
+                                                @php
+                                                $currentTime = old("time.{$reservation->id}", \Carbon\Carbon::parse($reservation->time)->format('H:i'));
+                                                @endphp
+                                                @for ($i = 0; $i <= 23; $i++)
+                                                    @php $timeOption=str_pad($i, 2, '0' , STR_PAD_LEFT) . ':00' ; @endphp
+                                                    <option value="{{ $timeOption }}" {{ $currentTime == $timeOption ? 'selected' : '' }}>
+                                                    {{ $timeOption }}
+                                                    </option>
+                                                    @endfor
+                                            </select>
+                                            <span class="pointer-events-none absolute right-2 inset-y-0 flex items-center text-gray-500">▼</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="">
+                                    <th class="w-24 px-2 py-2 text-left whitespace-nowrap">Number</th>
+                                    <td class="px-4 py-2">
+                                        <div class="relative">
+                                            <select name="number[{{ $reservation->id }}]" class="h-10 px-3 py-[5px] text-sm border border-gray-300 rounded w-full">
+                                                @for ($i = 1; $i <= 20; $i++)
+                                                    <option value="{{ $i }}" {{ old("number.{$reservation->id}", $reservation->number) == $i ? 'selected' : '' }}>
+                                                    {{ $i }}人
+                                                    </option>
+                                                    @endfor
+                                            </select>
+                                            <span class="pointer-events-none absolute right-2 inset-y-0 flex items-center text-gray-500">▼</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                            <div class="px-4 py-2 text-center">
                                 <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-md transition">
                                     予約内容変更
                                 </button>
@@ -99,21 +127,22 @@
                 </div>
             </div>
         </div>
-        @section('script')
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                const closeButtons = document.querySelectorAll(".close-btn");
+    </div>
+    @section('script')
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const closeButtons = document.querySelectorAll(".close-btn");
 
-                closeButtons.forEach(button => {
-                    button.addEventListener("click", function() {
-                        const form = this.closest(".reservation-box");
-                        if (form) {
-                            form.style.visibility = "hidden";
-                        }
-                    });
+            closeButtons.forEach(button => {
+                button.addEventListener("click", function() {
+                    const form = this.closest(".reservation-box");
+                    if (form) {
+                        form.style.visibility = "hidden";
+                    }
                 });
             });
-        </script>
-        @endsection
+        });
+    </script>
+    @endsection
     </div>
 </x-app-layout>
