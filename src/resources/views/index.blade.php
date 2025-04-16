@@ -11,12 +11,18 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 @foreach ($shops as $shop)
                 <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                    <img src="{{ asset($shop->image) }}" alt="店舗画像" class="w-full h-48 object-cover" />
+                    <img src="{{ asset('storage/' . $shop->image) }}" alt="店舗画像" class="w-full h-48 object-cover" />
                     <div class="p-4">
                         <p class="text-lg font-semibold">{{ $shop->name }}</p>
                         <p class="text-sm text-gray-600">#{{ $shop->category->content }} #{{ $shop->area->name }}</p>
                         <div class="mt-4 flex justify-between items-center">
-                            <a href="/detail/{{ $shop->id }}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">詳しく見る</a>
+                            @if (Auth::guard('web')->check())
+                            <a href="{{ route('user.detail', ['shop_id' => $shop->id]) }}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">詳しく見る</a>
+                            @elseif(Auth::guard('owner')->check())
+                            <a href="{{ route('owner.detail', ['shop_id' => $shop->id]) }}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">詳しく見る</a>
+                            @elseif(Auth::guard('admin')->check())
+                            <a href="{{ route('admin.detail', ['shop_id' => $shop->id]) }}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">詳しく見る</a>
+                            @endif
                             <div class="">
                                 <form action="{{ $shop->liked() ? '/shop/unlike/'.$shop->id : '/shop/like/'.$shop->id  }}" method="post" class="" id="like__form">
                                     @csrf

@@ -19,6 +19,7 @@ class ReservationsTableSeeder extends Seeder
         $param = [
             'shop_id' => 1,
             'user_id' => 1,
+            'course_id' => 1,
             'date' => Carbon::now()->addDays(3)->toDateString(),
             'time' => '19:00:00',
             'number' => 2,
@@ -28,6 +29,7 @@ class ReservationsTableSeeder extends Seeder
         $param = [
             'shop_id' => 2,
             'user_id' => 2,
+            'course_id' => 1,
             'date' => Carbon::now()->addDays(3)->toDateString(),
             'time' => '20:00:00',
             'number' => 3,

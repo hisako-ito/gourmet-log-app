@@ -10,17 +10,24 @@ use App\Http\Requests\RegisterRequest;
 use Illuminate\Support\Facades\Hash;
 use App\Notifications\OwnerVerifyEmail;
 use App\Models\User;
+use App\Models\Shop;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\NoticeMail;
 use App\Http\Requests\MailRequest;
 
 class AdminController extends Controller
 {
+    public function adminDetail($shop_id)
+    {
+        $shop = Shop::with('category', 'area', 'owner')->find($shop_id);
+
+        return view('admin.admin-detail', compact('shop'));
+    }
+
     public function showAdminPage()
     {
 
-
-        return view('admin-mypage');
+        return view('admin.admin-mypage');
     }
 
     /**

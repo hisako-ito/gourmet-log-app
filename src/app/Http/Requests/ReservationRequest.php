@@ -29,6 +29,7 @@ class ReservationRequest extends FormRequest
         return [
             'date' => ['required', 'after_or_equal:' . $tomorrow],
             'time' => ['required'],
+            'course_id' => ['required'],
             'number' => ['required'],
         ];
     }
@@ -39,6 +40,7 @@ class ReservationRequest extends FormRequest
             'date.required' => '日付を選択してください',
             'date.after_or_equal' => '明日以降の日付を入力してください',
             'time.required' => '時間を選択してください',
+            'course_id.required' => 'コースを選択してください',
             'number.required' => '人数を選択してください',
         ];
     }
