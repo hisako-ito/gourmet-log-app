@@ -14,6 +14,15 @@ use Illuminate\Support\Facades\Storage;
 
 class OwnerController extends Controller
 {
+    public function ownerDetail($shop_id)
+    {
+        $shop = Shop::with('category', 'area', 'owner')->find($shop_id);
+        $owner = Auth::guard('owner')->user();
+        $categories = Category::all();
+        $areas = Area::all();
+        return view('owner.owner-detail', compact('shop', 'categories', 'areas', 'owner'));
+    }
+
     public function ownerMyPageShow($shop_id = null)
     {
         $owner = Auth::guard('owner')->user();
@@ -29,7 +38,7 @@ class OwnerController extends Controller
         $categories = Category::all();
         $areas = Area::all();
 
-        return view('owner-mypage', compact('owner', 'shops', 'categories', 'reservations', 'shop_id', 'categories', 'areas'));
+        return view('owner.owner-mypage', compact('owner', 'shops', 'categories', 'reservations', 'shop_id', 'categories', 'areas'));
     }
 
     public function shopStore(StoreShopRequest $request)
@@ -43,17 +52,16 @@ class OwnerController extends Controller
         $shop->category_id = $request->category_id;
         $shop->area_id = $request->area_id;
 
-        $file = $request->file('image');
-        $fileName = $file->getClientOriginalName();
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $fileName = $file->getClientOriginalName();
 
-        $file = $request->file('image');
-        $fileName = $file->getClientOriginalName();
-        $file->move(public_path('storage/shop_images'), $fileName);
+            $path = $file->storeAs('shop_images', $fileName, 'public');
 
-        $shop->image = 'storage/shop_images/' . $fileName;
+            $shop->image = $path;
+        }
 
         $shop->save();
-
 
         return redirect()->route('owner.page')->with('message', '店舗を登録しました');
     }
@@ -65,15 +73,22 @@ class OwnerController extends Controller
         $imagePath = $shop->image;
 
         if ($request->hasFile('image')) {
+            // 元画像の削除
             if ($shop->image) {
-                Storage::disk('public')->delete(str_replace('storage/', '', $shop->image));
-            };
+                Storage::disk('public')->delete($shop->image); // 'storage/' は付けない
+            }
+
+            // 画像の保存（public/storage/shop_images 配下に）
             $file = $request->file('image');
             $fileName = $file->getClientOriginalName();
-            $file->move(public_path('storage/shop_images'), $fileName);
 
-            $imagePath = 'storage/shop_images/' . $fileName;
+            // 保存先は storage/app/public/shop_images
+            $path = $file->storeAs('shop_images', $fileName, 'public');
+
+            // DBに保存するパスは storage/ を含まない
+            $imagePath = $path;
         }
+
 
         $shop->update([
             'name' => $request->name,

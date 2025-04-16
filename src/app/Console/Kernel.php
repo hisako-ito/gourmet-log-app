@@ -15,11 +15,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // Bladeキャッシュの自動削除（毎日）
-        $schedule->command('view:clear')->daily();
-
-        // 古いセッションファイルを削除（7日以上前）
-        $schedule->exec("find storage/framework/sessions -type f -mtime +7 -delete")->daily();
+        $schedule->command('reminders:send-reservation-emails')->dailyAt('08:00');
     }
 
     /**

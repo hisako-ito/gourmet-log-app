@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Shop;
 use App\Models\Category;
+use App\Models\Course;
 use App\Models\Area;
 use App\Models\Reservation;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\ReservationRequest;
+
 
 class ShopController extends Controller
 {
@@ -44,33 +46,5 @@ class ShopController extends Controller
         }
 
         return $query;
-    }
-
-
-    public function detail($shop_id, Request $request)
-    {
-        $shop = Shop::with('category', 'area', 'owner')->find($shop_id);
-        $owner = Auth::guard('owner')->user();
-        $categories = Category::all();
-        $areas = Area::all();
-        return view('detail', compact('shop', 'categories', 'areas', 'owner'));
-    }
-
-    public function store(ReservationRequest $request)
-    {
-        Reservation::create([
-            'shop_id' => $request->id,
-            'user_id' => Auth::id(),
-            'date' => $request->date,
-            'time' => $request->time,
-            'number' => $request->number,
-        ]);
-
-        return redirect()->route('done')->withInput();
-    }
-
-    public function done()
-    {
-        return view('done');
     }
 }

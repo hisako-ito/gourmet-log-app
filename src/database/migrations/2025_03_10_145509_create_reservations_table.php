@@ -17,10 +17,12 @@ class CreateReservationsTable extends Migration
             $table->id();
             $table->foreignId('shop_id')->constrained()->cascadeOnDelete();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('course_id')->constrained()->cascadeOnDelete();
             $table->date('date');
             $table->time('time');
             $table->integer('number');
             $table->string('qr_token')->unique()->nullable();
+            $table->boolean('is_paid')->default(false);
             $table->timestamps();
         });
     }

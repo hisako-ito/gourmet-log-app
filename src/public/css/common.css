@@ -30,3 +30,7 @@ textarea {
     height: 125px;
     overflow-y: scroll;
 }
+
+select {
+    margin: 0;
+}
