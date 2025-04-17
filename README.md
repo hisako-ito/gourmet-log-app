@@ -60,7 +60,7 @@ php artisan db:seed
 **name:** 店舗代表者ユーザ1～20   
 **email:** [owner1@gmail.com](mailto:admin1@gmail.com)  
 **password:** password  
-※20アカウントあります。メールアドレスのownerの数字がユーザー名の数字と一致します。
+**※20アカウントあります。メールアドレスのownerの数字がユーザー名の数字と一致します。
 ---
 
 #### 管理者アカウント
