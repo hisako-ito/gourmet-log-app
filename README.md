@@ -39,10 +39,12 @@ php artisan migrate
 ```
 php artisan db:seed
 ```
+8. シンボリックリンクを作成する
+```
+php artisan storage:link
+```
 
 ### ログイン情報
----
-
 ---
 
 #### 一般ユーザーアカウント
