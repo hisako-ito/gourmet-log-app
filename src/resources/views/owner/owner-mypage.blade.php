@@ -24,24 +24,28 @@
                         </select>
                     </form>
                     @forelse ($reservations as $index => $reservation)
-                    <table class="bg-blue-600 text-white rounded-lg shadow-md">
-                        <tr class="px-4 pt-4 flex justify-between">
-                            <td class="flex items-center"><i class="fa-regular fa-clock text-xl"></i>
-                                <span class="ml-2">
+                    <table class="table-fixed bg-blue-600 text-white rounded-lg w-full">
+                        <tr class="">
+                            <td class="px-4 py-2"><i class="fa-regular fa-clock text-xl"></i>
+                                <span class="">
                                     {{ $index === 0 ? '予約1' : '予約' . ($index + 1) }}</span>
                             </td>
                         </tr>
-                        <tr class="px-4 flex items-center">
-                            <th class="w-24 text-sm h-10 flex items-center">Date</th>
-                            <td class="rounded w-full">{{ $reservation->date }}</td>
+                        <tr class="">
+                            <th class="w-24 px-4 py-2 text-center whitespace-nowrap">Date</th>
+                            <td class="px-4 py-2">{{ $reservation->date }}</td>
                         </tr>
-                        <tr class="px-4 flex items-center">
-                            <th class="w-24 text-sm h-10 flex items-center">Time</th>
-                            <td class="rounded w-full">{{ $reservation->time }}</td>
+                        <tr class="">
+                            <th class="w-24 px-4 py-2 text-center whitespace-nowrap">Time</th>
+                            <td class="px-4 py-2">{{ $reservation->time }}</td>
                         </tr>
-                        <tr class="px-4 pb-4 flex items-center">
-                            <th class="w-24 text-sm h-10 flex items-center">Number</th>
-                            <td class="w-16 px-2 text-sm rounded">{{ $reservation->number }}人</td>
+                        <tr class="">
+                            <th class="w-24 px-4 py-2 text-center whitespace-nowrap">Course</th>
+                            <td class="px-4 py-2">{{ $reservation->course->name }}:{{ $reservation->course->price }}円</td>
+                        </tr>
+                        <tr class="">
+                            <th class="w-24 px-4 py-2 text-center whitespace-nowrap">Number</th>
+                            <td class="px-4 py-2">{{ $reservation->number }}人</td>
                         </tr>
                     </table>
                     @empty
@@ -130,18 +134,40 @@
                         </div>
                         <div class="">
                             <div class="">
-                                <div class="">
-                                    <label class="font-bold">店舗詳細</label>
-                                </div>
-                                <div class="">
-                                    <textarea class="w-full" type="text" name="description" id="description" cols="30" rows="10">{{ old('description') }}</textarea>
-                                </div>
+                                <label class="font-bold">店舗詳細</label>
+                            </div>
+                            <div class="">
+                                <textarea class="w-full" type="text" name="description" id="description" cols="30" rows="10">{{ old('description') }}</textarea>
                             </div>
                             <div class="text-red-500">
                                 @error('description')
                                 {{ $message }}
                                 @enderror
                             </div>
+                        </div>
+                        <div class="mt-4">
+                            <label class="font-bold block mb-2">コース一覧</label>
+
+                            <div id="course-container">
+                                <div class="course-group mb-4">
+                                    <label class="font-bold">コース名</label>
+                                    <input type="text" name="courses[0][name]" class="w-full" placeholder="例：ディナーコース">
+                                    @error('courses.0.name')
+                                    <p class="text-red-500 text-sm">{{ $message }}</p>
+                                    @enderror
+                                    <label class="font-bold mt-2">料金</label>
+                                    <input type="number" name="courses[0][price]" class="w-full" placeholder="例：5000">
+                                    @error('courses.0.price')
+                                    <p class="text-red-500 text-sm">{{ $message }}</p>
+                                    @enderror
+                                    <label class="font-bold mt-2">コース詳細</label>
+                                    <input type="text" name="courses[0][description]" class="w-full" placeholder="例：前菜、メイン、デザートがついています">
+                                    @error('courses.0.description')
+                                    <p class="text-red-500 text-sm">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                            </div>
+                            <button type="button" id="add-course" class="mt-2 bg-gray-300 px-3 py-1 rounded hover:bg-gray-400">＋コースを追加</button>
                         </div>
                         <input type="hidden" name="owner_id" value="{{ $owner->id }}">
                         <div class="text-center">
@@ -199,6 +225,25 @@
                 document.getElementById('shopSelect').addEventListener('change', function() {
                     const shopId = this.value;
                     window.location.href = `/owner/mypage/${shopId}`;
+                });
+            </script>
+            <script>
+                let courseIndex = 1;
+                document.getElementById('add-course').addEventListener('click', function() {
+                    const container = document.getElementById('course-container');
+                    container.insertAdjacentHTML('beforeend', `
+            <div class="course-group mt-4">
+                <label class="font-bold">コース名</label>
+                <input type="text" name="courses[${courseIndex}][name]" class="w-full" placeholder="コース名">
+
+                <label class="font-bold mt-2">料金</label>
+                <input type="number" name="courses[${courseIndex}][price]" class="w-full" placeholder="料金">
+
+                <label class="font-bold mt-2">コース詳細</label>
+                <input type="text" name="courses[${courseIndex}][description]" class="w-full" placeholder="コース詳細">
+            </div>
+        `);
+                    courseIndex++;
                 });
             </script>
             @endsection

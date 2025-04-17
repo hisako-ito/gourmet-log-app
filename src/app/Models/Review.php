@@ -4,23 +4,17 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Reservation extends Model
+class Review extends Model
 {
     use HasFactory;
-    use SoftDeletes;
 
     protected $fillable = [
         'shop_id',
         'user_id',
-        'course_id',
-        'date',
-        'time',
-        'number',
-        'qr_token',
-        'is_paid',
-        'is_reviewed'
+        'reservation_id',
+        'rating',
+        'comment',
     ];
 
     public function shop()
@@ -33,13 +27,8 @@ class Reservation extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function course()
+    public function reservation()
     {
-        return $this->belongsTo(Course::class);
-    }
-
-    public function reviews()
-    {
-        return $this->hasMany(Review::class);
+        return $this->belongsTo(Reservation::class);
     }
 }

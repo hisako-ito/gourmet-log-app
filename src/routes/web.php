@@ -36,6 +36,7 @@ Route::middleware(['auth:web', 'verified'])->group(function () {
     Route::post('/detail/{shop_id}', [UserController::class, 'store'])->name('reservations.store');
     Route::get('/done', [UserController::class, 'done'])->name('done');
     Route::get('/reservation/qr/{token}', [UserController::class, 'verify'])->name('reservation.qr');
+    Route::post('/reviews', [UserController::class, 'reviewStore'])->name('reviews.store');
 });
 
 require __DIR__ . '/auth.php';

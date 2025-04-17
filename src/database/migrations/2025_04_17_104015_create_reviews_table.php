@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateReservationsTable extends Migration
+class CreateReviewsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,18 +13,13 @@ class CreateReservationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('reservations', function (Blueprint $table) {
+        Schema::create('reviews', function (Blueprint $table) {
             $table->id();
             $table->foreignId('shop_id')->constrained()->cascadeOnDelete();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('course_id')->constrained()->cascadeOnDelete();
-            $table->date('date');
-            $table->time('time');
-            $table->integer('number');
-            $table->string('qr_token')->unique()->nullable();
-            $table->boolean('is_paid')->default(false);
-            $table->boolean('is_reviewed')->default(false);
-            $table->softDeletes();
+            $table->foreignId('reservation_id')->constrained()->cascadeOnDelete();
+            $table->unsignedTinyInteger('rating')->default(0)->nullable();
+            $table->text('comment');
             $table->timestamps();
         });
     }
@@ -36,6 +31,6 @@ class CreateReservationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('reservations');
+        Schema::dropIfExists('reviews');
     }
 }

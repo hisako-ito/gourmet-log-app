@@ -9,23 +9,61 @@
                 </div>
                 @endif
             </div>
+            @if($shop->owner_id == $owner->id)
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div>
-                    <div class="flex items-center mb-4">
+                <div class="flex flex-col gap-4">
+                    <div class="flex items-center">
                         <a href="{{ route('home') }}" class="mr-2">
-                            <button class="bg-white text-xl px-3 py-1 rounded shadow-md"><i class="fa-solid fa-chevron-left"></i></button></a><span class="text-xl font-bold">{{ $shop->name }}</span>
+                            <button class="bg-white text-xl px-3 py-1 rounded shadow-md"><i class="fa-solid fa-chevron-left"></i></button></a>
+                        <h2 class="inline text-xl font-bold">{{ $shop->name }}</h2>
                     </div>
-                    <img src="{{ asset('storage/' . $shop->image) }}" alt="店舗画像" class="w-full h-[300px] object-cover rounded shadow-md mb-4" />
-                    <p class="text-gray-700 mb-2">#{{ $shop->area->name }} #{{ $shop->category->content }}</p>
-                    <p class="text-gray-800 leading-relaxed">{{ $shop->description }}</p>
+                    <img src="{{ asset('storage/' . $shop->image) }}" alt="店舗画像" class="w-full h-[300px] object-cover rounded shadow-md" />
+                    <div>
+                        <p class="">#{{ $shop->area->name }}&nbsp#{{ $shop->category->content }}</p>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold">店舗詳細</h3>
+                        <p class="ml-4 leading-relaxed">{{ $shop->description }}</p>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold">コース一覧</h3>
+                        <ul class="ml-4">
+                            @foreach($courses as $course)
+                            <li>{{ $course->name }}：{{ $course->price }}円 {{ $course->description }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                    <div class="">
+                        <h3 class="text-lg font-bold">評価</h3>
+                        @foreach ($shop->reviews as $review)
+                        <div class="flex flex-col gap-2 p-2">
+                            <p class="">{{ $review->user->name }}様<span class="text-xs ml-2">{{ \Carbon\Carbon::parse($review->reservation->date)->format('Y/m') }}訪問</span></p>
+                            <div class="flex text-yellow-400">
+                                @for ($i = 1; $i <= 5; $i++)
+                                    @if ($i <=$review->rating)
+                                    <i class="fas fa-star"></i>
+                                    @else
+                                    <i class="far fa-star"></i>
+                                    @endif
+                                    @endfor
+                            </div>
+                            <div class="bg-white w-full rounded p-2" readonly>{{ $review->comment }}</div>
+                        </div>
+                        @endforeach
+                    </div>
                 </div>
                 <div class="w-full max-w-xl px-8">
                     <div class="flex flex-col gap-2">
                         <h3 class="text-xl font-bold text-center">店舗情報更新</h3>
                     </div>
-                    <form action="{{ route('owner.detail', ['shop_id' => $shop->id]) }}" method="post" class="" enctype="multipart/form-data">
-                        @method('PATCH')
+                    <form action="{{ route('shop.update', ['shop_id' => $shop->id]) }}" method="post" enctype="multipart/form-data">
                         @csrf
+                        @method('PATCH')
+                        @if ($errors->has('courses'))
+                        <div class="text-red-500 text-sm mb-2">
+                            {{ $errors->first('courses') }}
+                        </div>
+                        @endif
                         <input type="hidden" name="id" value="{{ $shop->id }}" />
                         <div class="mt-2 w-full">
                             <label class="font-bold">店舗名</label>
@@ -89,12 +127,94 @@
                                 @enderror
                             </div>
                         </div>
+                        <div class="mt-4">
+                            <label class="font-bold block mb-2">コース</label>
+                            <div id="course-edit-container">
+                                @foreach($courses as $index => $course)
+                                <div class="course-group mb-4 border-t pt-4">
+                                    <input type="hidden" name="courses[{{ $index }}][id]" value="{{ $course->id }}">
+                                    @error('courses.0.id')
+                                    <p class="text-red-500 text-sm">{{ $message }}</p>
+                                    @enderror
+                                    <label class="block font-semibold">コース名</label>
+                                    <input type="text" name="courses[{{ $index }}][name]" class="w-full" value="{{ $course->name }}">
+                                    @error('courses.0.name')
+                                    <p class="text-red-500 text-sm">{{ $message }}</p>
+                                    @enderror
+                                    <label class="block font-semibold mt-2">料金</label>
+                                    <input type="number" name="courses[{{ $index }}][price]" class="w-full" value="{{ $course->price }}">
+                                    @error('courses.0.price')
+                                    <p class="text-red-500 text-sm">{{ $message }}</p>
+                                    @enderror
+                                    <label class="block font-semibold mt-2">コース詳細</label>
+                                    <input type="text" name="courses[{{ $index }}][description]" class="w-full" value="{{ $course->description }}">
+                                    @error('courses.0.description')
+                                    <p class="text-red-500 text-sm">{{ $message }}</p>
+                                    @enderror
+
+                                    <label class="inline-flex items-center mt-2">
+                                        <input type="checkbox" name="courses[{{ $index }}][delete]" value="1" class="mr-2">
+                                        このコースを削除する
+                                    </label>
+                                </div>
+                                @endforeach
+                            </div>
+                            <button type="button" id="add-new-course" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded">
+                                ＋ 新しいコースを追加
+                            </button>
+                        </div>
+
                         <div class="flex justify-center gap-6">
                             <button class="px-4 py-2 bg-blue-600 text-white rounded cursor-pointer hover:bg-blue-700" type="submit">更新する</button>
                         </div>
                     </form>
                 </div>
             </div>
+            @else
+            <div class="w-full flex justify-center">
+                <div class="flex flex-col gap-4 w-full max-w-xl px-8">
+                    <div class="flex items-center">
+                        <a href="{{ route('home') }}" class="mr-2">
+                            <button class="bg-white text-xl px-3 py-1 rounded shadow-md"><i class="fa-solid fa-chevron-left"></i></button></a>
+                        <h2 class="inline text-xl font-bold">{{ $shop->name }}</h2>
+                    </div>
+                    <img src="{{ asset('storage/' . $shop->image) }}" alt="店舗画像" class="w-full h-[300px] object-cover rounded shadow-md" />
+                    <div>
+                        <p class="">#{{ $shop->area->name }}&nbsp#{{ $shop->category->content }}</p>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold">店舗詳細</h3>
+                        <p class="ml-4 leading-relaxed">{{ $shop->description }}</p>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold">コース一覧</h3>
+                        <ul class="ml-4">
+                            @foreach($courses as $course)
+                            <li>{{ $course->name }}：{{ $course->price }}円 {{ $course->description }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                    <div class="">
+                        <h3 class="text-lg font-bold">評価</h3>
+                        @foreach ($shop->reviews as $review)
+                        <div class="flex flex-col gap-2 p-2">
+                            <p class="">{{ $review->user->name }}様<span class="text-xs ml-2">{{ \Carbon\Carbon::parse($review->reservation->date)->format('Y/m') }}訪問</span></p>
+                            <div class="flex text-yellow-400">
+                                @for ($i = 1; $i <= 5; $i++)
+                                    @if ($i <=$review->rating)
+                                    <i class="fas fa-star"></i>
+                                    @else
+                                    <i class="far fa-star"></i>
+                                    @endif
+                                    @endfor
+                            </div>
+                            <div class="bg-white w-full rounded p-2" readonly>{{ $review->comment }}</div>
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+            @endif
         </div>
     </div>
 
@@ -127,6 +247,30 @@
             closeBtn.style.display = "none";
             imagePreview.style.display = "none";
             imageInput.value = "";
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let newCourseIndex = 0;
+            const addButton = document.getElementById('add-new-course');
+            if (addButton) {
+                addButton.addEventListener('click', function() {
+                    const container = document.getElementById('course-edit-container');
+                    container.insertAdjacentHTML('beforeend', `
+                <div class="mt-4 border-t pt-4">
+                    <label>コース名</label>
+                    <input type="text" name="new_courses[${newCourseIndex}][name]" class="w-full">
+
+                    <label class="mt-2">料金</label>
+                    <input type="number" name="new_courses[${newCourseIndex}][price]" class="w-full">
+
+                    <label class="mt-2">コース詳細</label>
+                    <input type="text" name="new_courses[${newCourseIndex}][description]" class="w-full">
+                </div>
+            `);
+                    newCourseIndex++;
+                });
+            }
         });
     </script>
     @endsection

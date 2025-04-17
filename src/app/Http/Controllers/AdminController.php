@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Auth\Events\Registered;
-use Illuminate\Support\Facades\Auth;
 use App\Models\Owner;
 use Illuminate\Http\Request;
 use App\Http\Requests\RegisterRequest;
@@ -14,14 +12,16 @@ use App\Models\Shop;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\NoticeMail;
 use App\Http\Requests\MailRequest;
+use App\Models\Course;
 
 class AdminController extends Controller
 {
     public function adminDetail($shop_id)
     {
         $shop = Shop::with('category', 'area', 'owner')->find($shop_id);
+        $courses = Course::where('shop_id', $shop_id)->get();
 
-        return view('admin.admin-detail', compact('shop'));
+        return view('admin.admin-detail', compact('shop', 'courses'));
     }
 
     public function showAdminPage()

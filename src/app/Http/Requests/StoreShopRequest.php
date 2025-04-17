@@ -28,7 +28,11 @@ class StoreShopRequest extends FormRequest
             'image' => 'required|mimes:png,jpeg',
             'category_id' => 'required',
             'area_id' => 'required',
+            'courses' => 'array',
             'description' => 'required|max:400',
+            'courses.*.name' => 'required|max:255',
+            'courses.*.price' => 'required|integer|min:0',
+            'courses.*.description' => 'required|max:400',
         ];
     }
 
@@ -42,6 +46,13 @@ class StoreShopRequest extends FormRequest
             'area_id.required' => 'エリアを選択してください',
             'description.required' => '店舗詳細を入力してください',
             'description.max' => '本文は400文字以内で入力してください',
+            'courses.*.name.required' => '各コース名を入力してください',
+            'courses.*.name.max' => 'コース名は255文字以内で入力してください',
+            'courses.*.price.required' => '各コースの料金を入力してください',
+            'courses.*.price.integer' => 'コースの料金は整数で入力してください',
+            'courses.*.price.min' => 'コース料金は0円以上で入力してください',
+            'courses.*.description.required' => '各コースの詳細を入力してください',
+            'courses.*.description.required' => '各コースの詳細は400文字以内で入力してください',
         ];
     }
 }
