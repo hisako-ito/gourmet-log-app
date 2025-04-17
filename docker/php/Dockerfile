@@ -19,4 +19,7 @@ RUN apt-get update && apt-get install -y libmagickwand-dev --no-install-recommen
   pecl install imagick && \
   docker-php-ext-enable imagick
 
+RUN [ -d /var/www/storage ] && chown -R www-data:www-data /var/www/storage || echo "storage not found"
+RUN [ -d /var/www/bootstrap/cache ] && chown -R www-data:www-data /var/www/bootstrap/cache || echo "cache not found"
+
 WORKDIR /var/www
