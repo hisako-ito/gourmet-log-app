@@ -60,7 +60,7 @@ php artisan db:seed
 **name:** 店舗代表者ユーザ1～20   
 **email:** [owner1@gmail.com](mailto:owner@gmail.com)  
 **password:** password  
-**※20アカウントあります。メールアドレスのownerの数字がユーザー名の数字と一致します。
+※20アカウントあります。メールアドレスのownerの数字がユーザー名の数字と一致します。
 
 ---
 
@@ -136,7 +136,7 @@ STRIPE_SECRET_KEY="シークレットキー"
 * MySQL 15.1
 
 ## ER図
-![flea_market_app](https://github.com/user-attachments/assets/d2981626-f85e-42da-97cc-234630e7ccc3)
+
 
 ## URL
 
