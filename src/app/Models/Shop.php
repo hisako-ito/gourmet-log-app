@@ -11,6 +11,7 @@ class Shop extends Model
     use HasFactory;
 
     protected $fillable = [
+        'owner_id',
         'name',
         'image',
         'description',
@@ -61,5 +62,19 @@ class Shop extends Model
     public function owner()
     {
         return $this->belongsTo(Owner::class);
+    }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    public function canUserReview($userId)
+    {
+        return $this->reservations()
+            ->where('user_id', $userId)
+            ->whereDate('date', '<=', now()->toDateString())
+            ->where('is_reviewed', false)
+            ->exists();
     }
 }

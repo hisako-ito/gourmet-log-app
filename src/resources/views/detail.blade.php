@@ -9,15 +9,47 @@
                 </div>
                 @endif
             </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div>
-                    <div class="flex items-center mb-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="flex flex-col gap-4">
+                    <div class="flex items-center">
                         <a href="{{ route('home') }}" class="mr-2">
-                            <button class="bg-white text-xl px-3 py-1 rounded shadow-md"><i class="fa-solid fa-chevron-left"></i></button></a><span class="text-xl font-bold">{{ $shop->name }}</span>
+                            <button class="bg-white text-xl px-3 py-1 rounded shadow-md"><i class="fa-solid fa-chevron-left"></i></button></a>
+                        <h2 class="inline text-xl font-bold">{{ $shop->name }}</h2>
                     </div>
-                    <img src="{{ asset('storage/' . $shop->image) }}" alt="店舗画像" class="w-full h-[300px] object-cover rounded shadow-md mb-4" />
-                    <p class="text-gray-700 mb-2">#{{ $shop->area->name }} #{{ $shop->category->content }}</p>
-                    <p class="text-gray-800 leading-relaxed">{{ $shop->description }}</p>
+                    <img src="{{ asset('storage/' . $shop->image) }}" alt="店舗画像" class="w-full h-[300px] object-cover rounded shadow-md" />
+                    <div>
+                        <p class="">#{{ $shop->area->name }}&nbsp#{{ $shop->category->content }}</p>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold">店舗詳細</h3>
+                        <p class="ml-4 leading-relaxed">{{ $shop->description }}</p>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold">コース一覧</h3>
+                        <ul class="ml-4">
+                            @foreach($courses as $course)
+                            <li>{{ $course->name }}：{{ $course->price }}円 {{ $course->description }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                    <div class="">
+                        <h3 class="text-lg font-bold">評価</h3>
+                        @foreach ($shop->reviews as $review)
+                        <div class="flex flex-col gap-2 p-2">
+                            <p class="">{{ $review->user->name }}様<span class="text-xs ml-2">{{ \Carbon\Carbon::parse($review->reservation->date)->format('Y/m') }}訪問</span></p>
+                            <div class="flex text-yellow-400">
+                                @for ($i = 1; $i <= 5; $i++)
+                                    @if ($i <=$review->rating)
+                                    <i class="fas fa-star"></i>
+                                    @else
+                                    <i class="far fa-star"></i>
+                                    @endif
+                                    @endfor
+                            </div>
+                            <div class="bg-white w-full rounded p-2" readonly>{{ $review->comment }}</div>
+                        </div>
+                        @endforeach
+                    </div>
                 </div>
                 <div class="bg-blue-600 text-white rounded-lg shadow-lg p-6 flex flex-col justify-between">
                     <div class="">
@@ -37,7 +69,7 @@
                             <div class="relative">
                                 <select name="time" class="w-full p-2 text-black rounded block">
                                     <option value="" disabled selected>-- 時間を選択 --</option>
-                                    @for ($i = 0; $i <= 24; $i++)
+                                    @for ($i = 11; $i <= 21; $i++)
                                         <option value="{{ $i }}:00" {{ old('time') == $i . ':00' ? 'selected' : '' }}>{{ $i }}:00</option>
                                         @endfor
                                 </select>
@@ -65,7 +97,7 @@
                             <div class="relative">
                                 <select name="number" class="w-full p-2 text-black rounded block">
                                     <option value="" disabled selected>-- 人数を選択 --</option>
-                                    @for ($i = 1; $i <= 10; $i++)
+                                    @for ($i = 1; $i <= 20; $i++)
                                         <option value="{{ $i }}" {{ old('number') == $i ? 'selected' : '' }}>{{ $i }}人</option>
                                         @endfor
                                 </select>

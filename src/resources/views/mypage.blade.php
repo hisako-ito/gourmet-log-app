@@ -59,7 +59,7 @@
                                                 @php
                                                 $currentTime = old("time.{$reservation->id}", \Carbon\Carbon::parse($reservation->time)->format('H:i'));
                                                 @endphp
-                                                @for ($i = 0; $i <= 23; $i++)
+                                                @for ($i = 11; $i <= 21; $i++)
                                                     @php $timeOption=str_pad($i, 2, '0' , STR_PAD_LEFT) . ':00' ; @endphp
                                                     <option value="{{ $timeOption }}" {{ $currentTime == $timeOption ? 'selected' : '' }}>
                                                     {{ $timeOption }}
@@ -116,7 +116,7 @@
                                 決済画面へ
                             </button>
                             @else
-                            <button type="button" disabled class="bg-blue-900 text-white px-6 py-2 rounded-md w-full cursor-not-allowed">支払い完了済み</button>
+                            <button type="button" disabled class="bg-blue-900 text-white px-6 py-2 rounded-md w-full cursor-not-allowed">支払い完了</button>
                             @endif
                         </form>
                     </div>

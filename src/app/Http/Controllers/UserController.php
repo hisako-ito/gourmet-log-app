@@ -12,14 +12,17 @@ use App\Models\Course;
 use Stripe\Stripe;
 use Illuminate\Support\Str;
 use App\Mail\ReservationConfirmed;
+use App\Mail\ReservationDeletedMail;
+use App\Mail\ReservationUpdatedMail;
 use Illuminate\Support\Facades\Mail;
 use Stripe\Checkout\Session;
+use App\Models\Review;
 
 class UserController extends Controller
 {
     public function detail($shop_id)
     {
-        $shop = Shop::with('category', 'area', 'owner')->find($shop_id);
+        $shop = Shop::with('category', 'area', 'owner', 'reviews')->find($shop_id);
         $courses = Course::where('shop_id', $shop_id)->get();
 
         return view('detail', compact('shop', 'courses'));
@@ -66,13 +69,18 @@ class UserController extends Controller
 
     public function destroy($reservation_id)
     {
-        Reservation::find($reservation_id)->delete();
+        $reservation = Reservation::with('user', 'shop')->findOrFail($reservation_id);
+
+        $reservation->delete();
+
+        Mail::to($reservation->user->email)->send(new ReservationDeletedMail($reservation));
+
         return redirect()->route('mypage')->with('message', '予約を削除しました');
     }
 
     public function update($reservation_id, Request $request)
     {
-        $reservation = Reservation::with('shop')->find($reservation_id);
+        $reservation = Reservation::with('shop', 'user')->findOrFail($reservation_id);
         $validator = Validator::make($request->all(), [
             "date.{$reservation->id}" => 'after_or_equal:' . now()->addDay()->format('Y-m-d'),
         ], [
@@ -92,6 +100,8 @@ class UserController extends Controller
             'course_id' => $request->input("course_id.{$reservation->id}"),
             'number' => $request->input("number.{$reservation->id}"),
         ]);
+
+        Mail::to($reservation->user->email)->send(new ReservationUpdatedMail($reservation));
 
         return redirect()->route('mypage')->with('message', "{$reservation->shop->name}の予約内容を変更しました");
     }
@@ -138,5 +148,33 @@ class UserController extends Controller
     {
         $reservation = Reservation::where('qr_token', $token)->firstOrFail();
         return view('reservation.verify', compact('reservation'));
+    }
+
+    public function reviewStore(Request $request)
+    {
+        $user = Auth::user();
+
+        $reservation = Reservation::where('shop_id', $request->shop_id)
+            ->where('user_id', $user->id)
+            ->where('is_reviewed', false)
+            ->orderBy('date', 'asc')
+            ->first();
+
+        if (!$reservation) {
+            return redirect()->back()->with('message', '予約履歴が見つかりません');
+        }
+
+        Review::create([
+            'reservation_id' => $reservation->id,
+            'shop_id' => $request->shop_id,
+            'user_id' => $user->id,
+            'comment' => $request->comment,
+            'rating' => $request->rating,
+        ]);
+
+        $reservation->is_reviewed = true;
+        $reservation->save();
+
+        return redirect()->route('home')->with('message', '評価を送信しました');
     }
 }

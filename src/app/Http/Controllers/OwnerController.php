@@ -11,6 +11,7 @@ use App\Http\Requests\StoreShopRequest;
 use App\Http\Requests\UpdateShopRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Course;
 
 class OwnerController extends Controller
 {
@@ -20,7 +21,9 @@ class OwnerController extends Controller
         $owner = Auth::guard('owner')->user();
         $categories = Category::all();
         $areas = Area::all();
-        return view('owner.owner-detail', compact('shop', 'categories', 'areas', 'owner'));
+        $courses = Course::where('shop_id', $shop_id)->get();
+
+        return view('owner.owner-detail', compact('shop', 'categories', 'areas', 'owner', 'courses'));
     }
 
     public function ownerMyPageShow($shop_id = null)
@@ -45,23 +48,36 @@ class OwnerController extends Controller
     {
         $owner = Auth::guard('owner')->user();
 
-        $shop = new Shop();
-        $shop->owner_id = $owner->id;
-        $shop->name = $request->name;
-        $shop->description = $request->description;
-        $shop->category_id = $request->category_id;
-        $shop->area_id = $request->area_id;
-
         if ($request->hasFile('image')) {
             $file = $request->file('image');
             $fileName = $file->getClientOriginalName();
 
             $path = $file->storeAs('shop_images', $fileName, 'public');
-
-            $shop->image = $path;
         }
 
-        $shop->save();
+        $shop = Shop::create([
+            'owner_id' => $owner->id,
+            'name' => $request->name,
+            'image' => $path,
+            'category_id' => $request->category_id,
+            'area_id' => $request->area_id,
+            'description' => $request->description,
+        ]);
+
+        if (!empty($request->courses)) {
+            foreach ($request->courses as $course) {
+                if (!isset($course['name'], $course['price']) || $course['name'] === '' || $course['price'] === '') {
+                    continue;
+                }
+
+                Course::create([
+                    'shop_id' => $shop->id,
+                    'name' => $course['name'],
+                    'price' => $course['price'],
+                    'description' => $course['description'] ?? '',
+                ]);
+            }
+        }
 
         return redirect()->route('owner.page')->with('message', '店舗を登録しました');
     }
@@ -73,22 +89,17 @@ class OwnerController extends Controller
         $imagePath = $shop->image;
 
         if ($request->hasFile('image')) {
-            // 元画像の削除
             if ($shop->image) {
-                Storage::disk('public')->delete($shop->image); // 'storage/' は付けない
+                Storage::disk('public')->delete($shop->image);
             }
 
-            // 画像の保存（public/storage/shop_images 配下に）
             $file = $request->file('image');
             $fileName = $file->getClientOriginalName();
 
-            // 保存先は storage/app/public/shop_images
             $path = $file->storeAs('shop_images', $fileName, 'public');
 
-            // DBに保存するパスは storage/ を含まない
             $imagePath = $path;
         }
-
 
         $shop->update([
             'name' => $request->name,
@@ -97,6 +108,39 @@ class OwnerController extends Controller
             'area_id' => $request->area_id,
             'image' => $imagePath,
         ]);
+
+        if ($request->has('courses')) {
+            foreach ($request->courses as $courseData) {
+                $course = Course::find($courseData['id']);
+
+                if ($course && $course->shop_id == $shop->id) {
+                    if (!empty($courseData['delete'])) {
+                        $course->delete();
+                    } else {
+                        $course->update([
+                            'name' => $courseData['name'],
+                            'price' => $courseData['price'],
+                            'description' => $courseData['description'],
+                        ]);
+                    }
+                }
+            }
+        }
+
+        if (!empty($request->new_courses) && is_array($request->new_courses)) {
+            foreach ($request->new_courses as $newCourse) {
+                if (empty($newCourse['name']) || $newCourse['price'] === null) {
+                    continue;
+                }
+
+                Course::create([
+                    'shop_id' => $shop->id,
+                    'name' => $newCourse['name'],
+                    'price' => $newCourse['price'],
+                    'description' => $newCourse['description'] ?? '',
+                ]);
+            }
+        }
 
         return redirect()->route('shop.update', ['shop_id' => $shop_id])->with('message', '店舗情報を更新しました');
     }
