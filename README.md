@@ -43,17 +43,34 @@ php artisan db:seed
 ### ログイン情報
 ---
 
-**name:** 山田太郎  
-**email:** [taro@example.com](mailto:taro@example.com)  
-**password:** password123  
+---
 
-**name:** 山田花子      
-**email:** [hanako@example.com](mailto:hanako@example.com)  
-**password:** password123  
+#### 一般ユーザーアカウント
+**name:** 一般ユーザ1    
+**email:** [general1@gmail.com](mailto:general1@gmail.com)  
+**password:** password  
 
-**name:** 山田一郎    
-**email:** [ichiro@example.com](mailto:ichiro@example.com)  
-**password:** password123  
+**name:** 一般ユーザ2    
+**email:** [general2@gmail.com](mailto:general2@gmail.com)  
+**password:** password  
+
+---
+
+#### 店舗代表者アカウント 
+**name:** 店舗代表者ユーザ1～20   
+**email:** [owner1@gmail.com](mailto:admin1@gmail.com)  
+**password:** password  
+※20アカウントあります。メールアドレスのownerの数字がユーザー名の数字と一致します。
+---
+
+#### 管理者アカウント
+**name:** 管理者ユーザ1      
+**email:** [admin1@gmail.com](mailto:admin1@gmail.com)  
+**password:** password  
+
+**name:** 管理者ユーザ2    
+**email:** [admin2@gmail.com](mailto:admin2@gmail.com)  
+**password:** password  
 
 ---
 
@@ -112,30 +129,6 @@ STRIPE_SECRET_KEY="シークレットキー"
 以下のリンクは公式ドキュメントです。  
 [https://docs.stripe.com/payments/checkout?locale=ja-JP](https://docs.stripe.com/payments/checkout?locale=ja-JP)
 
-### PHPUnitを利用したテストに関して
-以下のコマンド:
-```
-//テスト用データベースの作成
-docker-compose exec mysql bash
-mysql -u root -p
-//パスワードはrootと入力
-CREATE DATABASE demo_test;
-
-docker-compose exec php bash
-cp .env .env.testing
-//.env.testingファイルの文頭部分にあるAPP_ENVとAPP_KEYを以下のように変更
-//APP_ENVをtestに変更
-//APP_KEYの＝の後を削除
-//DB_DATABASEをdemo_testに変更  
-//DB_USERNAMEをrootに変更  
-//DB_PASSWORDをrootに変更  
-php artisan key:generate --env=testing
-php artisan config:clear
-php artisan migrate:fresh --env=testing
-./vendor/bin/phpunit　
-```
-※.env.testingにもStripeのAPIキーを設定してください。
-
 ## 使用技術(実行環境)
 * PHP 7.4.9
 * Laravel 8.83.8
@@ -145,7 +138,10 @@ php artisan migrate:fresh --env=testing
 ![flea_market_app](https://github.com/user-attachments/assets/d2981626-f85e-42da-97cc-234630e7ccc3)
 
 ## URL
-* 開発環境： [http://localhost](http://localhost)
+
+* 開発環境： [http://localhost/login](http://localhost/login)(一般ユーザーログイン画面)
+  　　　　　　[http://localhost/owner/login](http://localhost/owner/login)(店舗代表者ログイン画面)  
+  　　　　　　[http://localhost/admin/login](http://localhost/admin/login)(管理者ログイン画面) 
 * phpMyAdmin： [http://localhost:8080/](http://localhost:8080/)
 * mailhog： [http://localhost:8025/](http://localhost:8025/)
 
