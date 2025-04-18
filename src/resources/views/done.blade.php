@@ -6,6 +6,8 @@
                 <div class="w-full max-w-md">
                     <div class="bg-white shadow-md rounded-md px-8 py-12">
                         <p class="text-center text-xl">ご予約ありがとうございます</p>
+                        <p class="text-center text-sm mt-2">予約確定メールをお送りしました</p>
+                        <p class="text-center text-sm mt-2">当日、来店されましたら、<br />メールに記載されているQRコードを店員にお見せください</p>
                         <form class="flex justify-center mt-6" action="/" method="get">
                             @csrf
                             <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">戻る</button>

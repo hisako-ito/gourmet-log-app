@@ -114,7 +114,7 @@ class UserController extends Controller
             abort(403, '不正なアクセスです');
         }
 
-        Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
+        Stripe::setApiKey(config('services.stripe.secret'));
 
         $session = Session::create([
             'payment_method_types' => ['card'],
