@@ -61,7 +61,7 @@ class OwnerVerifyEmail extends Notification
             ->line('下のボタンをクリックして、メールアドレスの確認を完了してください。')
             ->action('メールアドレスを確認する', $verificationUrl)
             ->line("ログインには以下の初期パスワードを使用してください")
-            ->line("【初期パスワード】{$this->initialPassword}")
+            ->line("【パスワード】{$this->initialPassword}")
             ->line('このメールに心当たりがない場合は、無視してください。');
     }
 

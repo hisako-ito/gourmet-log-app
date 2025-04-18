@@ -39,9 +39,12 @@
                                 </button>
                                 @endif
                                 <div class="">
-                                    <form action="{{ $shop->liked() ? '/shop/unlike/'.$shop->id : '/shop/like/'.$shop->id  }}" method="post" class="" id="like__form">
+                                    <form action="{{ $shop->liked() ? '/shop/unlike/'.$shop->id : '/shop/like/'.$shop->id  }}" method="post" id="like__form">
                                         @csrf
-                                        <button><i class="fa-2xl fa-heart {{ $shop->liked() ? 'fa-sharp fa-solid text-red-500' : 'fa-sharp fa-solid text-gray-300' }}"></i></button>
+                                        <button type="submit"
+                                            @if(Auth::guard('owner')->check() || Auth::guard('admin')->check()) disabled @endif>
+                                            <i class="fa-2xl fa-heart {{ $shop->liked() ? 'fa-sharp fa-solid text-red-500' : 'fa-sharp fa-solid text-gray-300' }}"></i>
+                                        </button>
                                         <p class="text-center">{{$shop->likeCount()}}</p>
                                     </form>
                                 </div>
