@@ -39,7 +39,21 @@ php artisan migrate
 ```
 php artisan db:seed
 ```
-8. シンボリックリンクを作成する
+8. storageディレクトリ配下の再作成(開発時、誤ってstorageディレクトリを削除してしまい、再作成しないとパーミッションの問題でキャッシュクリアがうまくできません)
+```
+# storage配下の再作成（Laravelが必要とする構造）
+mkdir -p storage/app/public
+mkdir -p storage/framework/cache/data
+mkdir -p storage/framework/sessions
+mkdir -p storage/framework/testing
+mkdir -p storage/framework/views
+mkdir -p storage/logs
+
+# 権限の再設定
+chown -R www-data:www-data storage bootstrap/cache
+chmod -R 775 storage bootstrap/cache
+```
+9. シンボリックリンクを作成する
 ```
 php artisan storage:link
 ```
@@ -94,22 +108,6 @@ php artisan cache:clear
 php artisan config:clear
 php artisan route:clear
 php artisan config:cache
-```
-### ⚠️ 注意点
-もし パーミッションの問題で `php artisan cache:clear` ができない場合は、以下を実行してください：
-
-```
-# storage配下の再作成（Laravelが必要とする構造）
-mkdir -p storage/app/public
-mkdir -p storage/framework/cache/data
-mkdir -p storage/framework/sessions
-mkdir -p storage/framework/testing
-mkdir -p storage/framework/views
-mkdir -p storage/logs
-
-# 権限の再設定
-chown -R www-data:www-data storage bootstrap/cache
-chmod -R 775 storage bootstrap/cache
 ```
 
 ### Stripe設定
