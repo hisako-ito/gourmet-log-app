@@ -7,6 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use App\Models\Reservation;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class ReservationUpdatedMail extends Mailable
 {
@@ -18,10 +19,13 @@ class ReservationUpdatedMail extends Mailable
      * @return void
      */
     public $reservation;
+    public $qrImage;
 
     public function __construct(Reservation $reservation)
     {
         $this->reservation = $reservation;
+        $url = route('reservation.qr', ['token' => $reservation->qr_token]);
+        $this->qrImage = 'data:image/png;base64,' . base64_encode(QrCode::format('png')->size(200)->generate($url));
     }
 
     /**

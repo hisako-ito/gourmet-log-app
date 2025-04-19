@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Shop;
 use App\Models\Course;
+use App\Models\Like;
 use Stripe\Stripe;
 use Illuminate\Support\Str;
 use App\Mail\ReservationConfirmed;
@@ -28,7 +29,7 @@ class UserController extends Controller
         return view('detail', compact('shop', 'courses'));
     }
 
-    public function store(ReservationRequest $request)
+    public function storeReservation(ReservationRequest $request)
     {
         $qrToken = Str::uuid();
 
@@ -67,7 +68,7 @@ class UserController extends Controller
         return view('mypage', compact('user', 'reservations', 'shops', 'coursesByShop'));
     }
 
-    public function destroy($reservation_id)
+    public function destroyReservation($reservation_id)
     {
         $reservation = Reservation::with('user', 'shop')->findOrFail($reservation_id);
 
@@ -78,7 +79,7 @@ class UserController extends Controller
         return redirect()->route('mypage')->with('message', '予約を削除しました');
     }
 
-    public function update($reservation_id, Request $request)
+    public function updateReservation($reservation_id, Request $request)
     {
         $reservation = Reservation::with('shop', 'user')->findOrFail($reservation_id);
         $validator = Validator::make($request->all(), [
@@ -150,7 +151,7 @@ class UserController extends Controller
         return view('reservation.verify', compact('reservation'));
     }
 
-    public function reviewStore(Request $request)
+    public function storeReview(Request $request)
     {
         $user = Auth::user();
 
@@ -176,5 +177,20 @@ class UserController extends Controller
         $reservation->save();
 
         return redirect()->route('home')->with('message', '評価を送信しました');
+    }
+
+    public function createLike($shop_id)
+    {
+        Like::create([
+            'user_id' => Auth::id(),
+            'shop_id' => $shop_id
+        ]);
+        return back();
+    }
+
+    public function destroyLike($shop_id)
+    {
+        Like::where(['user_id' => Auth::id(), 'shop_id' => $shop_id])->delete();
+        return back();
     }
 }
