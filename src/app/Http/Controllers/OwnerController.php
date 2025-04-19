@@ -15,18 +15,7 @@ use App\Models\Course;
 
 class OwnerController extends Controller
 {
-    public function ownerDetail($shop_id)
-    {
-        $shop = Shop::with('category', 'area', 'owner')->find($shop_id);
-        $owner = Auth::guard('owner')->user();
-        $categories = Category::all();
-        $areas = Area::all();
-        $courses = Course::where('shop_id', $shop_id)->get();
-
-        return view('owner.owner-detail', compact('shop', 'categories', 'areas', 'owner', 'courses'));
-    }
-
-    public function ownerMyPageShow($shop_id = null)
+    public function showOwnerMyPage($shop_id = null)
     {
         $owner = Auth::guard('owner')->user();
         $shops = Shop::where('owner_id', $owner->id)->with('owner')->get();
@@ -44,7 +33,7 @@ class OwnerController extends Controller
         return view('owner.owner-mypage', compact('owner', 'shops', 'categories', 'reservations', 'shop_id', 'categories', 'areas'));
     }
 
-    public function shopStore(StoreShopRequest $request)
+    public function storeShop(StoreShopRequest $request)
     {
         $owner = Auth::guard('owner')->user();
 
@@ -82,7 +71,18 @@ class OwnerController extends Controller
         return redirect()->route('owner.page')->with('message', '店舗を登録しました');
     }
 
-    public function shopUpdate($shop_id, UpdateShopRequest $request)
+    public function showOwnerDetailPage($shop_id)
+    {
+        $shop = Shop::with('category', 'area', 'owner')->find($shop_id);
+        $owner = Auth::guard('owner')->user();
+        $categories = Category::all();
+        $areas = Area::all();
+        $courses = Course::where('shop_id', $shop_id)->get();
+
+        return view('owner.owner-detail', compact('shop', 'categories', 'areas', 'owner', 'courses'));
+    }
+
+    public function updateShop($shop_id, UpdateShopRequest $request)
     {
         $shop = Shop::find($shop_id);
 

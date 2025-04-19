@@ -16,41 +16,10 @@ use App\Models\Course;
 
 class AdminController extends Controller
 {
-    public function adminDetail($shop_id)
-    {
-        $shop = Shop::with('category', 'area', 'owner')->find($shop_id);
-        $courses = Course::where('shop_id', $shop_id)->get();
-
-        return view('admin.admin-detail', compact('shop', 'courses'));
-    }
-
-    public function showAdminPage()
+    public function showAdminMyPage()
     {
 
         return view('admin.admin-mypage');
-    }
-
-    /**
-     * Handle an incoming registration request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
-     *
-     * @throws \Illuminate\Validation\ValidationException
-     */
-    public function ownerStore(RegisterRequest $request)
-    {
-        $validated = $request->validated();
-
-        $owner = Owner::create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'password' => Hash::make($validated['password']),
-        ]);
-
-        $owner->notify(new OwnerVerifyEmail($validated['password']));
-
-        return redirect()->route('admin.page')->with('message', '店舗代表者を登録しました。登録した店舗代表者のメールアドレスに認証メールを送信済みです。');
     }
 
     public function sendNotice(MailRequest $request)
@@ -80,5 +49,36 @@ class AdminController extends Controller
 
 
         return redirect()->route('admin.page')->with('message', '利用者にお知らせメールを送信しました。');
+    }
+
+    /**
+     * Handle an incoming registration request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     *
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function storeOwner(RegisterRequest $request)
+    {
+        $validated = $request->validated();
+
+        $owner = Owner::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => Hash::make($validated['password']),
+        ]);
+
+        $owner->notify(new OwnerVerifyEmail($validated['password']));
+
+        return redirect()->route('admin.page')->with('message', '店舗代表者を登録しました。登録した店舗代表者のメールアドレスに認証メールを送信済みです。');
+    }
+
+    public function showAdminDetailPage($shop_id)
+    {
+        $shop = Shop::with('category', 'area', 'owner')->find($shop_id);
+        $courses = Course::where('shop_id', $shop_id)->get();
+
+        return view('admin.admin-detail', compact('shop', 'courses'));
     }
 }

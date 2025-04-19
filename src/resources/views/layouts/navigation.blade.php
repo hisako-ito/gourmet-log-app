@@ -15,7 +15,19 @@
                             <div class="absolute top-2 left-2 rounded-md bg-blue-600">
                                 <a href="#" @click="open = false" class="close-btn text-white text-xl font-bold p-2 ">×</a>
                             </div>
+                            @php
+                            $isLoggedIn = Auth::guard('web')->check() || Auth::guard('owner')->check() || Auth::guard('admin')->check();
+                            @endphp
+
+                            @if ($isLoggedIn)
+                            @if (Auth::guard('web')->check())
                             <a href="{{ route('home') }}" class="block px-4 py-2 text-blue-600 hover:bg-gray-100">Home</a>
+                            @elseif (Auth::guard('owner')->check())
+                            <a href="{{ route('owner.home') }}" class="block px-4 py-2 text-blue-600 hover:bg-gray-100">Home</a>
+                            @elseif (Auth::guard('admin')->check())
+                            <a href="{{ route('admin.home') }}" class="block px-4 py-2 text-blue-600 hover:bg-gray-100">Home</a>
+                            @endif
+                            @endif
                             @if (Auth::guard('web')->check())
                             <a href="{{ route('mypage') }}" class="block px-4 py-2 text-blue-600 hover:bg-gray-100">Mypage</a>
                             <form method="POST" action="{{ route('logout') }}">
@@ -47,11 +59,17 @@
                         </div>
                     </div>
                 </div>
+                @php
+                $isLoggedIn = Auth::guard('web')->check() || Auth::guard('owner')->check() || Auth::guard('admin')->check();
+                @endphp
+
+                @if ($isLoggedIn && Route::has('home'))
                 <div class="flex-shrink-0 flex items-center ml-2">
                     <a href="{{ route('home') }}" class="text-blue-600 text-xl font-bold">
                         Rese
                     </a>
                 </div>
+                @endif
             </div>
             @if (Auth::check() && Route::is('home','search'))
             <div class="w-full md:w-auto md:ml-auto">

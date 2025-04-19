@@ -4,14 +4,10 @@
         <div class="w-full max-w-md">
             <div class="bg-white shadow-md rounded-md p-8">
                 <h2 class="text-center text-xl font-bold mb-6">会員登録ありがとうございます</h2>
-                @csrf
-                <div class="text-center">
-                    <a href="{{ route('home') }}" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition rounded-md">
-                        ログイン
-                    </a>
-
-                </div>
-                </form>
+                <p class="text-center text-sm mt-2">
+                    登録したメールアドレスに確認メールを送信しました。<br>
+                    メール内の「メールアドレスを確認」ボタンを押すと、<br>ログインが完了します。
+                </p>
             </div>
         </div>
     </div>

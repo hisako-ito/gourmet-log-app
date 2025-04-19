@@ -38,7 +38,7 @@ class OwnerAuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->route('home');
+        return redirect()->route('owner.home');
     }
 
     /**
@@ -55,6 +55,6 @@ class OwnerAuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect()->route('owner.login');;
+        return redirect()->route('owner.login');
     }
 }
