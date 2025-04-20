@@ -1,13 +1,6 @@
 # グルメログアプリ
 
 店舗の予約・更新・削除ができるアプリ。
-一般ユーザー(user)・店舗代表者(owner)・管理者(admin)
-他、以下機能を実装
-・事前支払い可能(カードのみ)
-・予約当日の朝にアラートメール送信
-・お気に入り追加・削除
-・店舗代表者(owner)のみ店舗情報登録・更新
-・管理者(admin)より利用者にお知らせメール送信
 ![グルメログアプリトップページ](https://github.com/user-attachments/assets/666ca47d-180b-4c0e-b0f8-0b4983ae5dd7)
 
 ## 環境構築
@@ -155,6 +148,150 @@ STRIPE_SECRET_KEY="シークレットキー"
 
 以下のリンクは公式ドキュメントです。  
 [https://docs.stripe.com/payments/checkout?locale=ja-JP](https://docs.stripe.com/payments/checkout?locale=ja-JP)
+
+## テーブル設計
+### `shops` テーブル
+
+```markdown
+| カラム名    | 型              | PRIMARY KEY   | UNIQUE KEY   | NOT NULL   | FOREIGN KEY    |
+|-------------|-----------------|---------------|--------------|------------|----------------|
+| id          | unsigned bigint | ○             |              | ○          |                |
+| owner_id    | unsigned bigint |               |              | ○          | owners(id)     |
+| area_id     | unsigned bigint |               |              | ○          | areas(id)      |
+| category_id | unsigned bigint |               |              | ○          | categories(id) |
+| image       | varchar(255)    |               |              |            |                |
+| description | varchar(255)    |               |              |            |                |
+| created_at  | timestamp       |               |              |            |                |
+| updated_at  | timestamp       |               |              |            |                |
+```
+
+### `users` テーブル
+
+```markdown
+| カラム名          | 型              | PRIMARY KEY   | UNIQUE KEY   | NOT NULL   | FOREIGN KEY   |
+|-------------------|-----------------|---------------|--------------|------------|---------------|
+| id                | unsigned bigint | ○             |              | ○          |               |
+| name              | varchar(255)    |               |              |            |               |
+| email             | varchar(255)    |               | ○            |            |               |
+| email_verified_at | timestamp       |               |              | ○          |               |
+| password          | varchar(255)    |               |              |            |               |
+| rememberToken     | varchar(100)    |               |              |            |               |
+| created_at        | timestamp       |               |              |            |               |
+| updated_at        | timestamp       |               |              |            |               |
+```
+
+### `areas` テーブル
+
+```markdown
+| カラム名   | 型              | PRIMARY KEY   | UNIQUE KEY   | NOT NULL   | FOREIGN KEY   |
+|------------|-----------------|---------------|--------------|------------|---------------|
+| id         | unsigned bigint | ○             |              | ○          |               |
+| name       | varchar(255)    |               |              |            |               |
+| created_at | timestamp       |               |              |            |               |
+| updated_at | timestamp       |               |              |            |               |
+```
+
+### `categories` テーブル
+
+```markdown
+| カラム名   | 型              | PRIMARY KEY   | UNIQUE KEY   | NOT NULL   | FOREIGN KEY   |
+|------------|-----------------|---------------|--------------|------------|---------------|
+| id         | unsigned bigint | ○             |              | ○          |               |
+| categories | varchar(255)    |               |              |            |               |
+| created_at | timestamp       |               |              |            |               |
+| updated_at | timestamp       |               |              |            |               |
+```
+
+### `owners` テーブル
+
+```markdown
+| カラム名          | 型              | PRIMARY KEY   | UNIQUE KEY   | NOT NULL   | FOREIGN KEY   |
+|-------------------|-----------------|---------------|--------------|------------|---------------|
+| id                | unsigned bigint | ○             |              | ○          |               |
+| name              | varchar(255)    |               |              |            |               |
+| email             | varchar(255)    |               | ○            |            |               |
+| email_verified_at | timestamp       |               |              | ○          |               |
+| password          | varchar(255)    |               |              |            |               |
+| rememberToken     | varchar(100)    |               |              |            |               |
+| created_at        | timestamp       |               |              |            |               |
+| updated_at        | timestamp       |               |              |            |               |
+```
+
+### `courses` テーブル
+
+```markdown
+| カラム名    | 型              | PRIMARY KEY   | UNIQUE KEY   | NOT NULL   | FOREIGN KEY   |
+|-------------|-----------------|---------------|--------------|------------|---------------|
+| id          | unsigned bigint | ○             |              | ○          |               |
+| shop_id     | unsigned bigint |               |              |            | shops(id)     |
+| name        | varchar(255)    |               |              |            |               |
+| description | varchar(255)    |               |              |            |               |
+| price       | int             |               |              |            |               |
+| created_at  | timestamp       |               |              |            |               |
+| updated_at  | timestamp       |               |              |            |               |
+```
+
+### `reservations` テーブル
+
+```markdown
+| カラム名    | 型              | PRIMARY KEY   | UNIQUE KEY   | NOT NULL   | FOREIGN KEY   |
+|-------------|-----------------|---------------|--------------|------------|---------------|
+| id          | unsigned bigint | ○             |              | ○          |               |
+| shop_id     | unsigned bigint |               |              | ○          | shops(id)     |
+| user_id     | unsigned bigint |               |              | ○          | users(id)     |
+| course_id   | unsigned bigint |               |              | ○          | courses(id)   |
+| date        | date            |               |              |            |               |
+| time        | time            |               |              |            |               |
+| number      | int             |               |              |            |               |
+| qr_token    | varchar(255)    |               | ○            | ○          |               |
+| is_paid     | boolean         |               |              |            |               |
+| is_reviewed | boolean         |               |              |            |               |
+| deleted_at  | timestamp       |               |              |            |               |
+| created_at  | timestamp       |               |              |            |               |
+| updated_at  | timestamp       |               |              |            |               |
+```
+
+### `likes` テーブル
+
+```markdown
+| カラム名   | 型              | PRIMARY KEY   | UNIQUE KEY   | NOT NULL   | FOREIGN KEY   |
+|------------|-----------------|---------------|--------------|------------|---------------|
+| id         | unsigned bigint | ○             |              | ○          |               |
+| user_id    | unsigned bigint |               |              | ○          | users(id)     |
+| shop_id    | unsigned bigint |               |              | ○          | shops(id)     |
+| created_at | timestamp       |               |              |            |               |
+| updated_at | timestamp       |               |              |            |               |
+```
+
+### `admins` テーブル
+
+```markdown
+| カラム名          | 型              | PRIMARY KEY   | UNIQUE KEY   | NOT NULL   | FOREIGN KEY   |
+|-------------------|-----------------|---------------|--------------|------------|---------------|
+| id                | unsigned bigint | ○             |              | ○          |               |
+| name              | varchar(255)    |               |              |            |               |
+| email             | varchar(255)    |               | ○            |            |               |
+| email_verified_at | timestamp       |               |              | ○          |               |
+| password          | varchar(255)    |               |              |            |               |
+| rememberToken     | varchar(255)    |               |              |            |               |
+| created_at        | timestamp       |               |              |            |               |
+| updated_at        | timestamp       |               |              |            |               |
+```
+
+### `reviews` テーブル
+
+```markdown
+| カラム名       | 型              | PRIMARY KEY   | UNIQUE KEY   | NOT NULL   | FOREIGN KEY      |
+|----------------|-----------------|---------------|--------------|------------|------------------|
+| id             | unsigned bigint | ○             |              | ○          |                  |
+| shop_id        | unsigned bigint |               |              | ○          | shops(id)        |
+| user_id        | unsigned bigint |               |              | ○          | users(id)        |
+| reservation_id | unsigned bigint |               |              | ○          | reservations(id) |
+| rating         | tinyint         |               |              |            |                  |
+| comment        | varchar(255)    |               |              |            |                  |
+| created_at     | timestamp       |               |              |            |                  |
+| updated_at     | timestamp       |               |              |            |                  |
+```
 
 ## 使用技術(実行環境)
 * PHP 7.4.9
