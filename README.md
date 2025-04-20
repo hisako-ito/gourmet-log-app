@@ -1,7 +1,7 @@
 # グルメログアプリ
 
-![Uploading スクリーンショット 2025-04-20 184840.png…]()
-
+## トップページ画像
+![グルメログアプリトップページ](https://github.com/user-attachments/assets/666ca47d-180b-4c0e-b0f8-0b4983ae5dd7)
 
 ## 環境構築
 
