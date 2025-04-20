@@ -35,18 +35,20 @@
                     <div class="">
                         <h3 class="text-lg font-bold">評価</h3>
                         @foreach ($shop->reviews as $review)
-                        <div class="flex flex-col gap-2 p-2">
+                        <div class="flex flex-col gap-2 p-2 mt-2">
                             <p class="">{{ $review->user->name }}様<span class="text-xs ml-2">{{ \Carbon\Carbon::parse($review->reservation->date)->format('Y/m') }}訪問</span></p>
-                            <div class="flex text-yellow-400">
+                            <div class="flex text-yellow-400 min-h-[24px]">
                                 @for ($i = 1; $i <= 5; $i++)
                                     @if ($i <=$review->rating)
                                     <i class="fas fa-star"></i>
                                     @else
-                                    <i class="far fa-star"></i>
+                                    <i class="far fa-star text-gray-300"></i>
                                     @endif
                                     @endfor
                             </div>
-                            <div class="bg-white w-full rounded p-2" readonly>{{ $review->comment }}</div>
+                            <div class="bg-white w-full rounded p-2 min-h-[24px] text-sm">
+                                {{ $review->comment ? $review->comment : 'コメントはありません' }}
+                            </div>
                         </div>
                         @endforeach
                     </div>

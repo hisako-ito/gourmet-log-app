@@ -16,8 +16,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware(['auth:admin'])->group(function () {
-    Route::get('/admin', [shopController::class, 'index'])->name('admin.home');
+Route::middleware(['auth:admin', 'verified'])->group(function () {
     Route::get('/admin/mypage', [AdminController::class, 'showAdminMyPage'])->name('admin.page');
     Route::post('/admin/mypage/send-notice', [AdminController::class, 'sendNotice'])->name('admin.sendNotice');
     Route::get('/admin/detail/{shop_id}', [AdminController::class, 'showAdminDetailPage'])->name('admin.detail');

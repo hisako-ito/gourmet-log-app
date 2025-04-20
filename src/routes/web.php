@@ -16,16 +16,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [ShopController::class, 'index'])->name('home');
-Route::get('/search', [ShopController::class, 'search']);
-
-Route::middleware(['auth:web'])->group(function () {
-    Route::get('/thanks', function () {
-        return view('thanks');
-    });
+Route::middleware(['auth_any', 'verified_any'])->group(function () {
+    Route::get('/', [ShopController::class, 'index'])->name('home');
+    Route::get('/search', [ShopController::class, 'search'])->name('search');
 });
 
 Route::middleware(['auth:web', 'verified'])->group(function () {
+    Route::get('/thanks', function () {
+        return view('thanks');
+    });
     Route::get('/mypage', [UserController::class, 'showMyPage'])->name('mypage');
     Route::delete('/reservation/delete/{reservation_id}', [UserController::class, 'destroyReservation']);
     Route::patch('/reservation/update/{reservation_id}', [UserController::class, 'updateReservation']);

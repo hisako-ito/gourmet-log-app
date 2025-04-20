@@ -27,6 +27,6 @@ class VerifyEmailController extends Controller
 
         $request->fulfill();
 
-        return redirect('/')->with('message', 'メール認証が完了しました。');
+        return redirect('/mypage')->with('message', 'メール認証が完了しました。');
     }
 }

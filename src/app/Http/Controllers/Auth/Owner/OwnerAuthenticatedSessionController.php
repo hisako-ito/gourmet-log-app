@@ -38,7 +38,7 @@ class OwnerAuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->route('owner.home');
+        return redirect()->route('home');
     }
 
     /**

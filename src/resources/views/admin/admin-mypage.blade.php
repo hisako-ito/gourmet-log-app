@@ -1,6 +1,7 @@
 <x-app-layout>
     @section('title','管理画面')
-    <div class="p-4">
+    <div class="px-4 py-4
+    ">
         <div class="max-w-7xl mx-auto">
             <div class="">
                 @if (session('message'))
@@ -9,6 +10,7 @@
                 </div>
                 @endif
             </div>
+            <h2 class="text-xl font-bold w-full my-2">{{ $adminUser->name }}様の管理画面</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div class="p-8">
                     <div class="flex items-center mb-4">
@@ -27,7 +29,7 @@
                         </div>
                         <div class="mt-2 w-full">
                             <label class="font-bold">本文</label>
-                            <textarea name="body" class="block w-full h-[125px]"></textarea>
+                            <textarea name="body" class="block w-full h-[300px]"></textarea>
                             <div class="text-red-500">
                                 @error('body')
                                 {{ $message }}

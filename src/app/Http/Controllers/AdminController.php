@@ -13,13 +13,15 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\NoticeMail;
 use App\Http\Requests\MailRequest;
 use App\Models\Course;
+use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
 {
     public function showAdminMyPage()
     {
+        $adminUser = Auth::guard('admin')->user();
 
-        return view('admin.admin-mypage');
+        return view('admin.admin-mypage', compact('adminUser'));
     }
 
     public function sendNotice(MailRequest $request)

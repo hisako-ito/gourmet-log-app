@@ -16,13 +16,6 @@ class ShopController extends Controller
 {
     public function index()
     {
-        if (!auth()->check()) {
-            return redirect()->route('login');
-        }
-
-        if (!auth()->user()->hasVerifiedEmail()) {
-            return redirect()->route('verification.notice');
-        }
         $shops = Shop::with('category', 'area')->paginate(8);
 
         return view('index', compact('shops'));
@@ -30,10 +23,6 @@ class ShopController extends Controller
 
     public function search(Request $request)
     {
-        if (!auth()->check()) {
-            return redirect()->route('login');
-        }
-
         $query = Shop::query();
 
         $query = $this->getSearchQuery($request, $query);
@@ -44,10 +33,6 @@ class ShopController extends Controller
 
     private function getSearchQuery($request, $query)
     {
-        if (!auth()->check()) {
-            return redirect()->route('login');
-        }
-
         if ($request->filled('keyword')) {
             $query->where('name', 'like', '%' . $request->keyword . '%');
         }
