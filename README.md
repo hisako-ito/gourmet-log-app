@@ -180,30 +180,25 @@ STRIPE_SECRET_KEY="シークレットキー"
 
 ### `areas` テーブル
 
-```markdown
-| カラム名   | 型              | PRIMARY KEY   | UNIQUE KEY   | NOT NULL   | FOREIGN KEY   |
+| カラム名    | 型              | PRIMARY KEY   | UNIQUE KEY   | NOT NULL   | FOREIGN KEY   |
 |------------|-----------------|---------------|--------------|------------|---------------|
 | id         | unsigned bigint | ○             |              | ○          |               |
 | name       | varchar(255)    |               |              |            |               |
 | created_at | timestamp       |               |              |            |               |
 | updated_at | timestamp       |               |              |            |               |
-```
 
 ### `categories` テーブル
 
-```markdown
-| カラム名   | 型              | PRIMARY KEY   | UNIQUE KEY   | NOT NULL   | FOREIGN KEY   |
+| カラム名    | 型              | PRIMARY KEY   | UNIQUE KEY   | NOT NULL   | FOREIGN KEY   |
 |------------|-----------------|---------------|--------------|------------|---------------|
 | id         | unsigned bigint | ○             |              | ○          |               |
 | categories | varchar(255)    |               |              |            |               |
 | created_at | timestamp       |               |              |            |               |
 | updated_at | timestamp       |               |              |            |               |
-```
 
 ### `owners` テーブル
 
-```markdown
-| カラム名          | 型              | PRIMARY KEY   | UNIQUE KEY   | NOT NULL   | FOREIGN KEY   |
+| カラム名           | 型              | PRIMARY KEY   | UNIQUE KEY   | NOT NULL   | FOREIGN KEY   |
 |-------------------|-----------------|---------------|--------------|------------|---------------|
 | id                | unsigned bigint | ○             |              | ○          |               |
 | name              | varchar(255)    |               |              |            |               |
@@ -213,12 +208,10 @@ STRIPE_SECRET_KEY="シークレットキー"
 | rememberToken     | varchar(100)    |               |              |            |               |
 | created_at        | timestamp       |               |              |            |               |
 | updated_at        | timestamp       |               |              |            |               |
-```
 
 ### `courses` テーブル
 
-```markdown
-| カラム名    | 型              | PRIMARY KEY   | UNIQUE KEY   | NOT NULL   | FOREIGN KEY   |
+| カラム名     | 型              | PRIMARY KEY   | UNIQUE KEY   | NOT NULL   | FOREIGN KEY   |
 |-------------|-----------------|---------------|--------------|------------|---------------|
 | id          | unsigned bigint | ○             |              | ○          |               |
 | shop_id     | unsigned bigint |               |              |            | shops(id)     |
@@ -227,12 +220,10 @@ STRIPE_SECRET_KEY="シークレットキー"
 | price       | int             |               |              |            |               |
 | created_at  | timestamp       |               |              |            |               |
 | updated_at  | timestamp       |               |              |            |               |
-```
 
 ### `reservations` テーブル
 
-```markdown
-| カラム名    | 型              | PRIMARY KEY   | UNIQUE KEY   | NOT NULL   | FOREIGN KEY   |
+| カラム名     | 型              | PRIMARY KEY   | UNIQUE KEY   | NOT NULL   | FOREIGN KEY   |
 |-------------|-----------------|---------------|--------------|------------|---------------|
 | id          | unsigned bigint | ○             |              | ○          |               |
 | shop_id     | unsigned bigint |               |              | ○          | shops(id)     |
@@ -247,24 +238,20 @@ STRIPE_SECRET_KEY="シークレットキー"
 | deleted_at  | timestamp       |               |              |            |               |
 | created_at  | timestamp       |               |              |            |               |
 | updated_at  | timestamp       |               |              |            |               |
-```
 
 ### `likes` テーブル
 
-```markdown
-| カラム名   | 型              | PRIMARY KEY   | UNIQUE KEY   | NOT NULL   | FOREIGN KEY   |
+| カラム名    | 型              | PRIMARY KEY   | UNIQUE KEY   | NOT NULL   | FOREIGN KEY   |
 |------------|-----------------|---------------|--------------|------------|---------------|
 | id         | unsigned bigint | ○             |              | ○          |               |
 | user_id    | unsigned bigint |               |              | ○          | users(id)     |
 | shop_id    | unsigned bigint |               |              | ○          | shops(id)     |
 | created_at | timestamp       |               |              |            |               |
 | updated_at | timestamp       |               |              |            |               |
-```
 
 ### `admins` テーブル
 
-```markdown
-| カラム名          | 型              | PRIMARY KEY   | UNIQUE KEY   | NOT NULL   | FOREIGN KEY   |
+| カラム名           | 型              | PRIMARY KEY   | UNIQUE KEY   | NOT NULL   | FOREIGN KEY   |
 |-------------------|-----------------|---------------|--------------|------------|---------------|
 | id                | unsigned bigint | ○             |              | ○          |               |
 | name              | varchar(255)    |               |              |            |               |
@@ -274,12 +261,10 @@ STRIPE_SECRET_KEY="シークレットキー"
 | rememberToken     | varchar(255)    |               |              |            |               |
 | created_at        | timestamp       |               |              |            |               |
 | updated_at        | timestamp       |               |              |            |               |
-```
 
 ### `reviews` テーブル
 
-```markdown
-| カラム名       | 型              | PRIMARY KEY   | UNIQUE KEY   | NOT NULL   | FOREIGN KEY      |
+| カラム名        | 型              | PRIMARY KEY   | UNIQUE KEY   | NOT NULL   | FOREIGN KEY      |
 |----------------|-----------------|---------------|--------------|------------|------------------|
 | id             | unsigned bigint | ○             |              | ○          |                  |
 | shop_id        | unsigned bigint |               |              | ○          | shops(id)        |
@@ -289,7 +274,6 @@ STRIPE_SECRET_KEY="シークレットキー"
 | comment        | varchar(255)    |               |              |            |                  |
 | created_at     | timestamp       |               |              |            |                  |
 | updated_at     | timestamp       |               |              |            |                  |
-```
 
 ## 使用技術(実行環境)
 * PHP 7.4.9
