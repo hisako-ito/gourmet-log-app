@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Reservation;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\ReservationRequest;
+use App\Http\Requests\ReviewRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Shop;
@@ -29,7 +30,7 @@ class UserController extends Controller
         return view('detail', compact('shop', 'courses'));
     }
 
-    public function storeReservation(ReservationRequest $request)
+    public function storeReservation(Request $request)
     {
         $qrToken = Str::uuid();
 
@@ -151,12 +152,13 @@ class UserController extends Controller
         return view('reservation.verify', compact('reservation'));
     }
 
-    public function storeReview(Request $request)
+    public function storeReview(ReviewRequest $request)
     {
         $user = Auth::user();
 
         $reservation = Reservation::where('shop_id', $request->shop_id)
             ->where('user_id', $user->id)
+            ->whereDate('date', '<=', now()->toDateString())
             ->where('is_reviewed', false)
             ->orderBy('date', 'asc')
             ->first();

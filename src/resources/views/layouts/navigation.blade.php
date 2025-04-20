@@ -12,7 +12,7 @@
                         x-transition.opacity
                         class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
                         <div class="bg-white w-3/4 md:w-1/3 rounded-lg shadow-lg text-center py-6 relative">
-                            <div class="absolute top-2 left-2 rounded-md bg-blue-600">
+                            <div class="absolute top-2 right-2 rounded-md bg-blue-600">
                                 <a href="#" @click="open = false" class="close-btn text-white text-xl font-bold p-2 ">×</a>
                             </div>
                             @php
@@ -20,13 +20,7 @@
                             @endphp
 
                             @if ($isLoggedIn)
-                            @if (Auth::guard('web')->check())
                             <a href="{{ route('home') }}" class="block px-4 py-2 text-blue-600 hover:bg-gray-100">Home</a>
-                            @elseif (Auth::guard('owner')->check())
-                            <a href="{{ route('owner.home') }}" class="block px-4 py-2 text-blue-600 hover:bg-gray-100">Home</a>
-                            @elseif (Auth::guard('admin')->check())
-                            <a href="{{ route('admin.home') }}" class="block px-4 py-2 text-blue-600 hover:bg-gray-100">Home</a>
-                            @endif
                             @endif
                             @if (Auth::guard('web')->check())
                             <a href="{{ route('mypage') }}" class="block px-4 py-2 text-blue-600 hover:bg-gray-100">Mypage</a>
@@ -71,7 +65,7 @@
                 </div>
                 @endif
             </div>
-            @if (Auth::check() && Route::is('home','search'))
+            @if ($isLoggedIn && Route::is('home','search'))
             <div class="w-full md:w-auto md:ml-auto">
                 <form class="flex flex-wrap items-center bg-white px-4 py-2 rounded shadow-md gap-4 w-full max-w-full lg:max-w-[500px]" action="/search" method="get">
                     @csrf

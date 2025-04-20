@@ -156,10 +156,14 @@
                                     <p class="text-red-500 text-sm">{{ $message }}</p>
                                     @enderror
                                     <label class="font-bold mt-2">料金</label>
-                                    <input type="number" name="courses[0][price]" class="w-full" placeholder="例：5000">
-                                    @error('courses.0.price')
-                                    <p class="text-red-500 text-sm">{{ $message }}</p>
-                                    @enderror
+                                    <select name="courses[0][price]" class="w-full">
+                                        <option value="" class="text-center">-- 金額を選択 --</option>
+                                        @for ($i = 1000; $i <= 10000; $i +=500)
+                                            <option value="{{ $i }}" {{ old('courses.0.price') == $i ? 'selected' : '' }}>
+                                            ¥{{ number_format($i) }}
+                                            </option>
+                                            @endfor
+                                    </select>
                                     <label class="font-bold mt-2">コース詳細</label>
                                     <input type="text" name="courses[0][description]" class="w-full" placeholder="例：前菜、メイン、デザートがついています">
                                     @error('courses.0.description')
@@ -231,18 +235,26 @@
                 let courseIndex = 1;
                 document.getElementById('add-course').addEventListener('click', function() {
                     const container = document.getElementById('course-container');
+                    let priceOptions = '';
+                    for (let i = 1000; i <= 10000; i += 500) {
+                        priceOptions += `<option value="${i}">¥${i.toLocaleString()}</option>`;
+                    }
+
                     container.insertAdjacentHTML('beforeend', `
-            <div class="course-group mt-4">
-                <label class="font-bold">コース名</label>
-                <input type="text" name="courses[${courseIndex}][name]" class="w-full" placeholder="コース名">
+                        <div class="course-group mt-4">
+                            <label class="font-bold">コース名</label>
+                            <input type="text" name="courses[${courseIndex}][name]" class="w-full" placeholder="コース名">
 
-                <label class="font-bold mt-2">料金</label>
-                <input type="number" name="courses[${courseIndex}][price]" class="w-full" placeholder="料金">
+                            <label class="font-bold mt-2">料金</label>
+                            <select name="courses[${courseIndex}][price]" class="w-full">
+                                <option value="">-- 金額を選択 --</option>
+                                ${priceOptions}
+                            </select>
 
-                <label class="font-bold mt-2">コース詳細</label>
-                <input type="text" name="courses[${courseIndex}][description]" class="w-full" placeholder="コース詳細">
-            </div>
-        `);
+                            <label class="font-bold mt-2">コース詳細</label>
+                            <input type="text" name="courses[${courseIndex}][description]" class="w-full" placeholder="コース詳細">
+                        </div>
+                    `);
                     courseIndex++;
                 });
             </script>

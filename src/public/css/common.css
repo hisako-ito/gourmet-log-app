@@ -27,7 +27,6 @@ input {
 
 textarea {
     resize: none;
-    height: 125px;
     overflow-y: scroll;
 }
 

@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="{{ asset('/css/navigation.css')  }}">
     @endsection
 
-    <div x-data="{ showModal: false, selectedShopId: null }">
+    <div x-data="{ showModal: {{ $errors->any() ? 'true' : 'false' }}, selectedShopId: {{ old('shop_id') ?? 'null' }} }">
         <div class="py-4 px-4">
             <div class="max-w-7xl mx-auto">
                 <div class="">
@@ -34,7 +34,7 @@
                                 @if ($shop->canUserReview(auth()->id()))
                                 <button
                                     @click="selectedShopId = {{ $shop->id }}; showModal = true"
-                                    class="bg-blue-500 text-white px-3 py-1 rounded mt-2">
+                                    class="bg-green-500 text-white px-3 py-1 rounded mt-2">
                                     評価する
                                 </button>
                                 @endif
@@ -69,19 +69,26 @@
                         </div>
                         <form method="POST" action="{{ route('reviews.store') }}">
                             @csrf
-                            <input type="hidden" name="shop_id" :value="selectedShopId">
-
-                            <input type="hidden" name="rating" value="0">
+                            <input type="hidden" name="shop_id" :value="selectedShopId ?? '{{ old('shop_id') }}'">
                             <div class="star-rating">
                                 @for ($i = 5; $i >= 1; $i--)
                                 <input class="hidden" type="radio" name="rating" value="{{ $i }}" id="star{{ $i }}">
                                 <label class="star" for="star{{ $i }}"><i class="fas fa-star"></i></label>
                                 @endfor
                             </div>
-
+                            <div class="text-red-500 text-sm text-center">
+                                @error('rating')
+                                {{ $message }}
+                                @enderror
+                            </div>
                             <label for="comment" class="block text-sm font-medium">コメント</label>
-                            <textarea name="comment" rows="4" class="border w-full p-2 mb-3"></textarea>
-                            <div class="text-center">
+                            <textarea name="comment" rows="4" class="border w-full p-2 mb-3">{{ old('comment') }}</textarea>
+                            <div class="text-red-500 text-sm text-center">
+                                @error('comment')
+                                {{ $message }}
+                                @enderror
+                            </div>
+                            <div class="text-center mt-4">
                                 <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">送信</button>
                             </div>
                             <div class="mt-4 text-center">
@@ -96,4 +103,5 @@
                 </div>
             </div>
         </div>
+    </div>
 </x-app-layout>
