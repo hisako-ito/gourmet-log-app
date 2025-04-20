@@ -42,7 +42,7 @@ php artisan migrate
 ```
 php artisan db:seed
 ```
-8. storageディレクトリ配下の再作成(開発時、誤ってstorageディレクトリを削除してしまい、再作成しないとパーミッションの問題でキャッシュクリアがうまくできません)
+8. storageディレクトリ配下の再作成  (開発時、誤ってstorageディレクトリを削除してしまい、再作成しないとパーミッションの問題でキャッシュクリアがうまくできません)
 ```
 # storage配下の再作成（Laravelが必要とする構造）
 mkdir -p storage/app/public
