@@ -152,8 +152,8 @@ STRIPE_SECRET_KEY="シークレットキー"
 ## テーブル設計
 ### `shops` テーブル
 
-```markdown
-| カラム名    | 型              | PRIMARY KEY   | UNIQUE KEY   | NOT NULL   | FOREIGN KEY    |
+
+| カラム名     | 型              | PRIMARY KEY   | UNIQUE KEY   | NOT NULL   | FOREIGN KEY    |
 |-------------|-----------------|---------------|--------------|------------|----------------|
 | id          | unsigned bigint | ○             |              | ○          |                |
 | owner_id    | unsigned bigint |               |              | ○          | owners(id)     |
@@ -163,7 +163,7 @@ STRIPE_SECRET_KEY="シークレットキー"
 | description | varchar(255)    |               |              |            |                |
 | created_at  | timestamp       |               |              |            |                |
 | updated_at  | timestamp       |               |              |            |                |
-```
+
 
 ### `users` テーブル
 
