@@ -167,8 +167,7 @@ STRIPE_SECRET_KEY="シークレットキー"
 
 ### `users` テーブル
 
-```markdown
-| カラム名          | 型              | PRIMARY KEY   | UNIQUE KEY   | NOT NULL   | FOREIGN KEY   |
+| カラム名           | 型              | PRIMARY KEY   | UNIQUE KEY   | NOT NULL   | FOREIGN KEY   |
 |-------------------|-----------------|---------------|--------------|------------|---------------|
 | id                | unsigned bigint | ○             |              | ○          |               |
 | name              | varchar(255)    |               |              |            |               |
@@ -178,7 +177,6 @@ STRIPE_SECRET_KEY="シークレットキー"
 | rememberToken     | varchar(100)    |               |              |            |               |
 | created_at        | timestamp       |               |              |            |               |
 | updated_at        | timestamp       |               |              |            |               |
-```
 
 ### `areas` テーブル
 
