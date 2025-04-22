@@ -286,9 +286,9 @@ STRIPE_SECRET_KEY="シークレットキー"
 
 ## URL
 
-* 開発環境： [http://localhost/login](http://localhost/login)(一般ユーザーログイン画面)
-  　　　　　　[http://localhost/owner/login](http://localhost/owner/login)(店舗代表者ログイン画面)  
-  　　　　　　[http://localhost/admin/login](http://localhost/admin/login)(管理者ログイン画面) 
+* 開発環境： [http://localhost/login](http://localhost/login)(一般ユーザーログイン画面)  
+[http://localhost/owner/login](http://localhost/owner/login)(店舗代表者ログイン画面)  
+[http://localhost/admin/login](http://localhost/admin/login)(管理者ログイン画面)   
 * phpMyAdmin： [http://localhost:8080/](http://localhost:8080/)
 * mailhog： [http://localhost:8025/](http://localhost:8025/)
 
