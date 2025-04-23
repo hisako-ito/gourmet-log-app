@@ -24,8 +24,8 @@ class MailRequest extends FormRequest
     public function rules()
     {
         return [
-            'subject' => 'required',
-            'body' => 'required',
+            'subject' => 'required  | max:100',
+            'body' => 'required | max:1000',
         ];
     }
 
@@ -33,7 +33,9 @@ class MailRequest extends FormRequest
     {
         return [
             'subject.required' => '件名を入力してください',
+            'subject.max' => '件名は100文字以内で入力してください',
             'body.required' => '本文を入力してください',
+            'body.max' => '本文は1000文字以内で入力してください',
         ];
     }
 }

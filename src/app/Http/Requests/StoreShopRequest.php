@@ -28,11 +28,11 @@ class StoreShopRequest extends FormRequest
             'image' => 'required|mimes:png,jpeg',
             'category_id' => 'required',
             'area_id' => 'required',
-            'courses' => 'array',
             'description' => 'required|max:400',
-            'courses.*.name' => 'required|max:255',
-            'courses.*.price' => 'required|integer|min:0',
-            'courses.*.description' => 'required|max:400',
+            'courses' => 'array',
+            'courses.*.name' => 'nullable|max:255',
+            'courses.*.price' => 'nullable',
+            'courses.*.description' => 'nullable|max:400',
         ];
     }
 
@@ -46,13 +46,31 @@ class StoreShopRequest extends FormRequest
             'area_id.required' => 'エリアを選択してください',
             'description.required' => '店舗詳細を入力してください',
             'description.max' => '本文は400文字以内で入力してください',
-            'courses.*.name.required' => '各コース名を入力してください',
             'courses.*.name.max' => 'コース名は255文字以内で入力してください',
-            'courses.*.price.required' => '各コースの料金を入力してください',
-            'courses.*.price.integer' => 'コースの料金は整数で入力してください',
             'courses.*.price.min' => 'コース料金は0円以上で入力してください',
-            'courses.*.description.required' => '各コースの詳細を入力してください',
-            'courses.*.description.required' => '各コースの詳細は400文字以内で入力してください',
+            'courses.*.description.max' => 'コースの詳細は400文字以内で入力してください',
         ];
+    }
+
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            $courses = $this->input('courses', []);
+
+            foreach ($courses as $i => $course) {
+                $hasAnyInput = !empty($course['name']) || !empty($course['price']) || !empty($course['description']);
+                if ($hasAnyInput) {
+                    if (empty($course['name'])) {
+                        $validator->errors()->add("courses.$i.name", 'コース名を入力してください');
+                    }
+                    if (empty($course['price'])) {
+                        $validator->errors()->add("courses.$i.price", '価格を選択してください');
+                    }
+                    if (empty($course['description'])) {
+                        $validator->errors()->add("courses.$i.description", 'コース詳細を入力してください');
+                    }
+                }
+            }
+        });
     }
 }

@@ -12,6 +12,10 @@ use App\Http\Requests\UpdateShopRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Course;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class OwnerController extends Controller
 {
@@ -84,6 +88,8 @@ class OwnerController extends Controller
 
     public function updateShop($shop_id, UpdateShopRequest $request)
     {
+        Log::debug('★updateShopに入りました');
+        Log::debug('★リクエスト内容', $request->all());
         $shop = Shop::find($shop_id);
 
         $imagePath = $shop->image;

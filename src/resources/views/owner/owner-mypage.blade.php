@@ -147,29 +147,14 @@
                         </div>
                         <div class="mt-4">
                             <label class="font-bold block mb-2">コース一覧</label>
+                            <div id="course-container" data-course-index="{{ count(old('courses', [['name' => '', 'price' => '', 'description' => '']])) }}">
+                                @php
+                                $oldCourses = old('courses', [['name' => '', 'price' => '', 'description' => '']]);
+                                @endphp
 
-                            <div id="course-container">
-                                <div class="course-group mb-4">
-                                    <label class="font-bold">コース名</label>
-                                    <input type="text" name="courses[0][name]" class="w-full" placeholder="例：ディナーコース">
-                                    @error('courses.0.name')
-                                    <p class="text-red-500 text-sm">{{ $message }}</p>
-                                    @enderror
-                                    <label class="font-bold mt-2">料金</label>
-                                    <select name="courses[0][price]" class="w-full">
-                                        <option value="" class="text-center">-- 金額を選択 --</option>
-                                        @for ($i = 1000; $i <= 10000; $i +=500)
-                                            <option value="{{ $i }}" {{ old('courses.0.price') == $i ? 'selected' : '' }}>
-                                            ¥{{ number_format($i) }}
-                                            </option>
-                                            @endfor
-                                    </select>
-                                    <label class="font-bold mt-2">コース詳細</label>
-                                    <input type="text" name="courses[0][description]" class="w-full" placeholder="例：前菜、メイン、デザートがついています">
-                                    @error('courses.0.description')
-                                    <p class="text-red-500 text-sm">{{ $message }}</p>
-                                    @enderror
-                                </div>
+                                @foreach ($oldCourses as $index => $course)
+                                @include('components.course-input', ['index' => $index])
+                                @endforeach
                             </div>
                             <button type="button" id="add-course" class="mt-2 bg-gray-300 px-3 py-1 rounded hover:bg-gray-400">＋コースを追加</button>
                         </div>
@@ -232,7 +217,7 @@
                 });
             </script>
             <script>
-                let courseIndex = 1;
+                let courseIndex = parseInt(document.getElementById('course-container').dataset.courseIndex || 0);
                 document.getElementById('add-course').addEventListener('click', function() {
                     const container = document.getElementById('course-container');
                     let priceOptions = '';
@@ -247,7 +232,7 @@
 
                             <label class="font-bold mt-2">料金</label>
                             <select name="courses[${courseIndex}][price]" class="w-full">
-                                <option value="">-- 金額を選択 --</option>
+                                <option value="" class="text-center">-- 金額を選択 --</option>
                                 ${priceOptions}
                             </select>
 

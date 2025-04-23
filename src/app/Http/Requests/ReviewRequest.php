@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Log;
 
 
 class ReviewRequest extends FormRequest
@@ -25,9 +24,8 @@ class ReviewRequest extends FormRequest
      */
     public function rules()
     {
-        Log::debug('ReviewRequest input:', $this->all()); // ★ここ！
         return [
-            'rating' => ['nullable', 'integer'],
+            'rating' => ['nullable'],
             'comment' => ['nullable', 'string', 'max:1000'],
         ];
     }
@@ -35,7 +33,6 @@ class ReviewRequest extends FormRequest
     public function messages()
     {
         return [
-            'rating.integer' => '評価は数字で指定してください',
             'comment.string' => 'コメントは文字列で入力してください',
             'comment.max' => 'コメントは1000文字以内で入力してください',
         ];
