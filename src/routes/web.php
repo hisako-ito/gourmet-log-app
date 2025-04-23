@@ -30,11 +30,11 @@ Route::middleware(['auth:web', 'verified'])->group(function () {
     Route::patch('/reservation/update/{reservation_id}', [UserController::class, 'updateReservation']);
     Route::get('/checkout/{reservation_id}', [UserController::class, 'checkout'])->name('checkout');
     Route::get('/checkout/success/{reservation_id}', [UserController::class, 'success'])->name('checkout.success');
-    Route::post('/shop/like/{item_id}', [UserController::class, 'createLike']);
-    Route::post('/shop/unlike/{item_id}', [UserController::class, 'destroyLike']);
+    Route::post('/shop/like/{shop_id}', [UserController::class, 'createLike']);
+    Route::post('/shop/unlike/{shop_id}', [UserController::class, 'destroyLike']);
     Route::get('/detail/{shop_id}', [UserController::class, 'detail'])->name('user.detail');
     Route::post('/detail/{shop_id}', [UserController::class, 'storeReservation'])->name('reservations.store');
-    Route::get('/done', [UserController::class, 'done'])->name('done');
+    Route::get('/done/{shop_id}', [UserController::class, 'done'])->name('done');
     Route::get('/reservation/qr/{token}', [UserController::class, 'verify'])->name('reservation.qr');
     Route::post('/reviews', [UserController::class, 'storeReview'])->name('reviews.store');
 });

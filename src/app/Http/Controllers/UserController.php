@@ -19,6 +19,7 @@ use App\Mail\ReservationUpdatedMail;
 use Illuminate\Support\Facades\Mail;
 use Stripe\Checkout\Session;
 use App\Models\Review;
+use Illuminate\Support\Carbon;
 
 class UserController extends Controller
 {
@@ -30,7 +31,7 @@ class UserController extends Controller
         return view('detail', compact('shop', 'courses'));
     }
 
-    public function storeReservation(Request $request)
+    public function storeReservation(ReservationRequest $request)
     {
         $qrToken = Str::uuid();
 
@@ -46,12 +47,13 @@ class UserController extends Controller
 
         Mail::to(Auth::user()->email)->send(new ReservationConfirmed($reservation));
 
-        return redirect()->route('done')->withInput();
+        return redirect()->route('done', ['shop_id' => $reservation->shop_id])->withInput();
     }
 
-    public function done()
+    public function done($shop_id)
     {
-        return view('done');
+        $shop = Shop::findOrFail($shop_id);
+        return view('done', compact('shop'));
     }
 
     public function showMyPage()
@@ -59,6 +61,7 @@ class UserController extends Controller
         $user = Auth::user();
         $reservations = Reservation::with('shop', 'course')
             ->where('user_id', $user->id)
+            ->where('date', '>=', Carbon::today())
             ->orderBy('date', 'asc')
             ->get();
 

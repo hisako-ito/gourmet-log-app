@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\URL;
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 
 class VerifyEmailController extends Controller
 {
@@ -19,14 +20,18 @@ class VerifyEmailController extends Controller
      * @param  \Illuminate\Foundation\Auth\EmailVerificationRequest  $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function __invoke(EmailVerificationRequest $request)
+    public function __invoke(EmailVerificationRequest $request): RedirectResponse
     {
-        if ($request->user()->hasVerifiedEmail()) {
-            return redirect('/')->with('message', 'すでに認証済みです。');
+        $user = User::find($request->route('id'));
+
+        if ($user->hasVerifiedEmail()) {
+            return redirect('/');
         }
 
-        $request->fulfill();
+        if ($user->markEmailAsVerified()) {
+            event(new Verified($user));
+        }
 
-        return redirect('/mypage')->with('message', 'メール認証が完了しました。');
+        return redirect('/thanks')->with('message', 'メール認証が完了しました。');
     }
 }

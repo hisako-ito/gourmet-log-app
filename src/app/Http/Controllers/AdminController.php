@@ -12,6 +12,7 @@ use App\Models\Shop;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\NoticeMail;
 use App\Http\Requests\MailRequest;
+use App\Http\Requests\OwnerRegisterRequest;
 use App\Models\Course;
 use Illuminate\Support\Facades\Auth;
 
@@ -61,7 +62,7 @@ class AdminController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function storeOwner(RegisterRequest $request)
+    public function storeOwner(OwnerRegisterRequest $request)
     {
         $validated = $request->validated();
 

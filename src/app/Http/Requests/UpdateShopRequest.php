@@ -3,24 +3,17 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Support\Facades\Log;
 
 class UpdateShopRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
     public function authorize()
     {
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
     public function rules()
     {
         return [
@@ -29,11 +22,14 @@ class UpdateShopRequest extends FormRequest
             'category_id' => 'required',
             'area_id' => 'required',
             'description' => 'required|max:400',
-            'new_courses' => 'array',
             'courses.*.id' => 'required|exists:courses,id',
             'courses.*.name' => 'required|string|max:255',
             'courses.*.price' => 'required|integer|min:0',
             'courses.*.description' => 'required|max:400',
+            'new_courses' => 'array',
+            'new_courses.*.name' => 'max:255',
+            'new_courses.*.price' => 'min:0',
+            'new_courses.*.description' => 'max:400',
         ];
     }
 
@@ -48,34 +44,52 @@ class UpdateShopRequest extends FormRequest
             'description.max' => '本文は400文字以内で入力してください',
             'courses.*.id.required' => 'コースIDが見つかりません。再読み込みをお試しください',
             'courses.*.id.exists' => '選択されたコースが存在しません',
-            'courses.*.name.required' => '各コース名を入力してください',
+            'courses.*.name.required' => 'コース名を入力してください',
             'courses.*.name.string' => 'コース名は文字列で入力してください',
             'courses.*.name.max' => 'コース名は255文字以内で入力してください',
-            'courses.*.price.required' => '各コースの料金を入力してください',
+            'courses.*.price.required' => 'コースの料金を入力してください',
             'courses.*.price.integer' => 'コースの料金は整数で入力してください',
             'courses.*.price.min' => 'コース料金は0円以上で入力してください',
-            'courses.*.description.required' => '各コースの詳細を入力してください',
-            'courses.*.description.required' => '各コースの詳細は400文字以内で入力してください',
+            'courses.*.description.required' => 'コースの詳細を入力してください',
+            'courses.*.description.max' => 'コースの詳細は400文字以内で入力してください',
+            'new_courses.*.name.max' => '新しいコース名は255文字以内で入力してください',
+            'new_courses.*.price.min' => '新しいコースの料金は0円以上で入力してください',
+            'new_courses.*.description.max' => '新しいコース詳細は400文字以内で入力してください',
         ];
     }
 
     public function withValidator($validator)
     {
         $validator->after(function ($validator) {
-            $courses = $this->input('courses', []);
             $newCourses = $this->input('new_courses', []);
+            Log::debug('★新コースのバリデーション開始', ['new_courses' => $newCourses]);
 
-            $remainingCourses = array_filter($courses, function ($course) {
-                return empty($course['delete']);
-            });
-
-            $newCourses = array_filter($newCourses, function ($course) {
-                return !empty($course['name']) && !empty($course['price']);
-            });
-
-            if (count($remainingCourses) + count($newCourses) === 0) {
-                $validator->errors()->add('courses', 'コースは1件以上必要です。');
+            foreach ($newCourses as $i => $course) {
+                $hasAny = !empty($course['name']) || !empty($course['price']) || !empty($course['description']);
+                if ($hasAny) {
+                    if (empty($course['name'])) {
+                        $validator->errors()->add("new_courses.$i.name", '新しいコース名を入力してください');
+                    }
+                    if (!isset($course['price']) || $course['price'] === '') {
+                        $validator->errors()->add("new_courses.$i.price", '新しいコースの料金を選択してください');
+                    }
+                    if (empty($course['description'])) {
+                        $validator->errors()->add("new_courses.$i.description", '新しいコースの詳細を入力してください');
+                    }
+                }
             }
         });
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        Log::debug('★バリデーション失敗', ['errors' => $validator->errors()->toArray()]);
+
+        throw new HttpResponseException(
+            redirect()
+                ->back()
+                ->withErrors($validator)
+                ->withInput()
+        );
     }
 }

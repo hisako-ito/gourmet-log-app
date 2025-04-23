@@ -58,12 +58,13 @@
                     <div class="flex flex-col gap-2">
                         <h3 class="text-xl font-bold text-center">店舗情報更新</h3>
                     </div>
+                    <pre>{{ var_export($errors->keys(), true) }}</pre>
                     <form action="{{ route('shop.update', ['shop_id' => $shop->id]) }}" method="post" enctype="multipart/form-data">
                         @csrf
                         @method('PATCH')
-                        @if ($errors->has('courses'))
+                        @if ($errors->has('new_courses'))
                         <div class="text-red-500 text-sm mb-2">
-                            {{ $errors->first('courses') }}
+                            {{ $errors->first('new_courses') }}
                         </div>
                         @endif
                         <input type="hidden" name="id" value="{{ $shop->id }}" />
@@ -131,26 +132,34 @@
                         </div>
                         <div class="mt-4">
                             <label class="font-bold block mb-2">コース</label>
-                            <div id="course-edit-container">
+                            <div id="course-edit-container" data-initial-index="{{ old('new_courses') ? count(old('new_courses')) : 0 }}">
                                 @foreach($courses as $index => $course)
                                 <div class="course-group mb-4 border-t pt-4">
                                     <input type="hidden" name="courses[{{ $index }}][id]" value="{{ $course->id }}">
-                                    @error('courses.0.id')
+                                    @error("courses.$index.id")
                                     <p class="text-red-500 text-sm">{{ $message }}</p>
                                     @enderror
                                     <label class="block font-semibold">コース名</label>
                                     <input type="text" name="courses[{{ $index }}][name]" class="w-full" value="{{ $course->name }}">
-                                    @error('courses.0.name')
+                                    @error("courses.$index.name")
                                     <p class="text-red-500 text-sm">{{ $message }}</p>
                                     @enderror
                                     <label class="block font-semibold mt-2">料金</label>
-                                    <input type="number" name="courses[{{ $index }}][price]" class="w-full" value="{{ $course->price }}">
-                                    @error('courses.0.price')
+                                    <select name="courses[{{ $index }}][price]" class="w-full">
+                                        <option value="" class="text-center" disabled selected>-- 金額を選択 --</option>
+                                        @for ($i = 1000; $i <= 10000; $i +=500)
+                                            <option value="{{ $i }}"
+                                            {{ old('courses.' . $index . '.price', $course->price) == $i ? 'selected' : '' }}>
+                                            ¥{{ number_format($i) }}
+                                            </option>
+                                            @endfor
+                                    </select>
+                                    @error("courses.$index.price")
                                     <p class="text-red-500 text-sm">{{ $message }}</p>
                                     @enderror
                                     <label class="block font-semibold mt-2">コース詳細</label>
                                     <input type="text" name="courses[{{ $index }}][description]" class="w-full" value="{{ $course->description }}">
-                                    @error('courses.0.description')
+                                    @error("courses.$index.description")
                                     <p class="text-red-500 text-sm">{{ $message }}</p>
                                     @enderror
 
@@ -159,6 +168,33 @@
                                         このコースを削除する
                                     </label>
                                 </div>
+                                @endforeach
+                                @php
+                                $oldNewCourses = old('new_courses', []);
+                                $errorIndexes = collect(array_keys($errors->getMessages()))
+                                ->map(function ($key) {
+                                if (preg_match('/new_courses\.(\d+)\./', $key, $matches)) {
+                                return (int) $matches[1];
+                                }
+                                return null;
+                                })
+                                ->filter()
+                                ->unique()
+                                ->values();
+
+                                $allIndexes = collect(array_keys($oldNewCourses))
+                                ->map(fn($i) => (int) $i)
+                                ->merge($errorIndexes)
+                                ->unique()
+                                ->sort()
+                                ->values();
+                                @endphp
+
+                                @foreach($allIndexes as $index)
+                                @include('components.new-course-input', [
+                                'index' => $index,
+                                'course' => $oldNewCourses[$index] ?? [],
+                                ] + ['errors' => $errors]) {{-- ← errorsを明示的に渡す --}}
                                 @endforeach
                             </div>
                             <button type="button" id="add-new-course" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded">
@@ -255,26 +291,34 @@
     </script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            let newCourseIndex = 0;
             const addButton = document.getElementById('add-new-course');
-            if (addButton) {
-                addButton.addEventListener('click', function() {
-                    const container = document.getElementById('course-edit-container');
-                    container.insertAdjacentHTML('beforeend', `
+            const container = document.getElementById('course-edit-container');
+            let newCourseIndex = parseInt(container.dataset.initialIndex || 0);
+
+            addButton.addEventListener('click', function() {
+                let priceOptions = '<option value="">-- 金額を選択 --</option>';
+                for (let i = 1000; i <= 10000; i += 500) {
+                    priceOptions += `<option value="${i}">¥${i.toLocaleString()}</option>`;
+                }
+
+                const courseHTML = `
                 <div class="mt-4 border-t pt-4">
-                    <label>コース名</label>
-                    <input type="text" name="new_courses[${newCourseIndex}][name]" class="w-full">
+                    <label class="block font-semibold">コース名</label>
+                    <input type="text" name="new_courses[${newCourseIndex}][name]" class="w-full" value="">
 
-                    <label class="mt-2">料金</label>
-                    <input type="number" name="new_courses[${newCourseIndex}][price]" class="w-full">
+                    <label class="block font-semibold mt-2">料金</label>
+                    <select name="new_courses[${newCourseIndex}][price]" class="w-full">
+                        ${priceOptions}
+                    </select>
 
-                    <label class="mt-2">コース詳細</label>
-                    <input type="text" name="new_courses[${newCourseIndex}][description]" class="w-full">
+                    <label class="block font-semibold mt-2">コース詳細</label>
+                    <input type="text" name="new_courses[${newCourseIndex}][description]" class="w-full" value="">
                 </div>
-            `);
-                    newCourseIndex++;
-                });
-            }
+            `;
+
+                container.insertAdjacentHTML('beforeend', courseHTML);
+                newCourseIndex++;
+            });
         });
     </script>
     @endsection
