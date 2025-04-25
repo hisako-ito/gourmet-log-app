@@ -33,7 +33,17 @@ class AuthenticatedSessionController extends Controller
         if (!Auth::guard('web')->attempt($credentials, $request->filled('remember'))) {
             return back()->withErrors([
                 'email' => '認証に失敗しました。',
-            ]);
+            ])->withInput();
+        }
+
+        $owner = Auth::guard('web')->user();
+
+        if (!$owner->hasVerifiedEmail()) {
+            Auth::guard('web')->logout();
+
+            return back()->withErrors([
+                'email' => 'メールアドレスが確認されていません。確認メールをご確認ください。',
+            ])->withInput();
         }
 
         $request->session()->regenerate();

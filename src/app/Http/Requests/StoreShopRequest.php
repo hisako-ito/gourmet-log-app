@@ -29,7 +29,7 @@ class StoreShopRequest extends FormRequest
             'category_id' => 'required',
             'area_id' => 'required',
             'description' => 'required|max:400',
-            'courses' => 'array',
+            'courses' => 'required|array',
             'courses.*.name' => 'nullable|max:255',
             'courses.*.price' => 'nullable',
             'courses.*.description' => 'nullable|max:400',
@@ -46,6 +46,7 @@ class StoreShopRequest extends FormRequest
             'area_id.required' => 'エリアを選択してください',
             'description.required' => '店舗詳細を入力してください',
             'description.max' => '本文は400文字以内で入力してください',
+            'courses.required' => 'コース情報を入力してください',
             'courses.*.name.max' => 'コース名は255文字以内で入力してください',
             'courses.*.price.min' => 'コース料金は0円以上で入力してください',
             'courses.*.description.max' => 'コースの詳細は400文字以内で入力してください',
@@ -57,19 +58,30 @@ class StoreShopRequest extends FormRequest
         $validator->after(function ($validator) {
             $courses = $this->input('courses', []);
 
+            $hasValidCourse = false;
+
             foreach ($courses as $i => $course) {
                 $hasAnyInput = !empty($course['name']) || !empty($course['price']) || !empty($course['description']);
+
                 if ($hasAnyInput) {
+                    $hasValidCourse = true;
+
                     if (empty($course['name'])) {
                         $validator->errors()->add("courses.$i.name", 'コース名を入力してください');
                     }
+
                     if (empty($course['price'])) {
-                        $validator->errors()->add("courses.$i.price", '価格を選択してください');
+                        $validator->errors()->add("courses.$i.price", 'コース料金を選択してください');
                     }
+
                     if (empty($course['description'])) {
                         $validator->errors()->add("courses.$i.description", 'コース詳細を入力してください');
                     }
                 }
+            }
+
+            if (!$hasValidCourse) {
+                $validator->errors()->add("courses", '1つ以上のコースを登録してください');
             }
         });
     }

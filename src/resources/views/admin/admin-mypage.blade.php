@@ -74,10 +74,6 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="mt-4 w-full">
-                            <label class="font-bold">パスワード確認</label>
-                            <input type="password" name=" password_confirmation" class="rounded w-full">
-                        </div>
                         <div class="flex justify-center mt-8">
                             <button class="px-4 py-2 bg-blue-600 text-white rounded cursor-pointer hover:bg-blue-700" type="submit">登録する</button>
                         </div>

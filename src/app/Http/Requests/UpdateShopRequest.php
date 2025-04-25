@@ -22,14 +22,15 @@ class UpdateShopRequest extends FormRequest
             'category_id' => 'required',
             'area_id' => 'required',
             'description' => 'required|max:400',
+            'courses' => 'required|array',
             'courses.*.id' => 'required|exists:courses,id',
             'courses.*.name' => 'required|string|max:255',
             'courses.*.price' => 'required|integer|min:0',
             'courses.*.description' => 'required|max:400',
             'new_courses' => 'array',
-            'new_courses.*.name' => 'max:255',
-            'new_courses.*.price' => 'min:0',
-            'new_courses.*.description' => 'max:400',
+            'new_courses.*.name' => 'nullable|max:255',
+            'new_courses.*.price' => 'nullable|min:0',
+            'new_courses.*.description' => 'nullable|max:400',
         ];
     }
 
@@ -42,6 +43,7 @@ class UpdateShopRequest extends FormRequest
             'area_id.required' => 'エリアを選択してください',
             'description.required' => '店舗詳細を入力してください',
             'description.max' => '本文は400文字以内で入力してください',
+            'courses.required' => '1つ以上のコースを登録してください',
             'courses.*.id.required' => 'コースIDが見つかりません。再読み込みをお試しください',
             'courses.*.id.exists' => '選択されたコースが存在しません',
             'courses.*.name.required' => 'コース名を入力してください',
@@ -62,11 +64,17 @@ class UpdateShopRequest extends FormRequest
     {
         $validator->after(function ($validator) {
             $newCourses = $this->input('new_courses', []);
-            Log::debug('★新コースのバリデーション開始', ['new_courses' => $newCourses]);
+            $existingCourses = $this->input('courses', []);
+
+            $hasValidNewCourse = false;
+            $hasValidExistingCourse = false;
 
             foreach ($newCourses as $i => $course) {
                 $hasAny = !empty($course['name']) || !empty($course['price']) || !empty($course['description']);
+
                 if ($hasAny) {
+                    $hasValidNewCourse = true;
+
                     if (empty($course['name'])) {
                         $validator->errors()->add("new_courses.$i.name", '新しいコース名を入力してください');
                     }
@@ -78,18 +86,19 @@ class UpdateShopRequest extends FormRequest
                     }
                 }
             }
+
+            foreach ($existingCourses as $i => $course) {
+                $isMarkedForDelete = isset($course['delete']) && $course['delete'] == '1';
+
+                if (!$isMarkedForDelete) {
+                    $hasValidExistingCourse = true;
+                    break;
+                }
+            }
+
+            if (!$hasValidExistingCourse && !$hasValidNewCourse) {
+                $validator->errors()->add("courses", '1つ以上のコースを登録してください');
+            }
         });
-    }
-
-    protected function failedValidation(Validator $validator)
-    {
-        Log::debug('★バリデーション失敗', ['errors' => $validator->errors()->toArray()]);
-
-        throw new HttpResponseException(
-            redirect()
-                ->back()
-                ->withErrors($validator)
-                ->withInput()
-        );
     }
 }

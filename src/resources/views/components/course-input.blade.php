@@ -1,4 +1,9 @@
 <div class="course-group mb-4">
+    <div class="text-red-500">
+        @error('courses')
+        {{ $message }}
+        @enderror
+    </div>
     <label class="font-bold">コース名</label>
     <input type="text" name="courses[{{ $index }}][name]" class="w-full" placeholder="例：ディナーコース"
         value="{{ old("courses.$index.name") }}">
