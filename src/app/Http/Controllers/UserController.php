@@ -76,6 +76,9 @@ class UserController extends Controller
     {
         $reservation = Reservation::with('user', 'shop')->findOrFail($reservation_id);
 
+        if ($reservation->is_paid) {
+            return redirect()->route('mypage')->with('message', '支払済みのため、予約を削除できません。直接、店舗にキャンセルの旨、ご連絡ください。');
+        }
         $reservation->delete();
 
         Mail::to($reservation->user->email)->send(new ReservationDeletedMail($reservation));

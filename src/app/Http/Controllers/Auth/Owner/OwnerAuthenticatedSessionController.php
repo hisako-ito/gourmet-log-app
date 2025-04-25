@@ -33,7 +33,17 @@ class OwnerAuthenticatedSessionController extends Controller
         if (!Auth::guard('owner')->attempt($credentials, $request->filled('remember'))) {
             return back()->withErrors([
                 'email' => '認証に失敗しました。',
-            ]);
+            ])->withInput();
+        }
+
+        $owner = Auth::guard('owner')->user();
+
+        if (!$owner->hasVerifiedEmail()) {
+            Auth::guard('owner')->logout();
+
+            return back()->withErrors([
+                'email' => 'メールアドレスが確認されていません。確認メールをご確認ください。',
+            ])->withInput();
         }
 
         $request->session()->regenerate();

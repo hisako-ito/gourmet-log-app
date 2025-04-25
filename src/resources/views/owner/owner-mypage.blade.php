@@ -137,7 +137,7 @@
                                 <label class="font-bold">店舗詳細</label>
                             </div>
                             <div class="">
-                                <textarea class="w-full" type="text" name="description" id="description" cols="30" rows="10">{{ old('description') }}</textarea>
+                                <textarea class="w-full rounded" type="text" name="description" id="description" cols="30" rows="10">{{ old('description') }}</textarea>
                             </div>
                             <div class="text-red-500">
                                 @error('description')

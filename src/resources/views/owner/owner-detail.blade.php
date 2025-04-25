@@ -58,15 +58,9 @@
                     <div class="flex flex-col gap-2">
                         <h3 class="text-xl font-bold text-center">店舗情報更新</h3>
                     </div>
-                    <pre>{{ var_export($errors->keys(), true) }}</pre>
                     <form action="{{ route('shop.update', ['shop_id' => $shop->id]) }}" method="post" enctype="multipart/form-data">
                         @csrf
                         @method('PATCH')
-                        @if ($errors->has('new_courses'))
-                        <div class="text-red-500 text-sm mb-2">
-                            {{ $errors->first('new_courses') }}
-                        </div>
-                        @endif
                         <input type="hidden" name="id" value="{{ $shop->id }}" />
                         <div class="mt-2 w-full">
                             <label class="font-bold">店舗名</label>
@@ -123,7 +117,7 @@
                         </div>
                         <div class="mt-2 w-full">
                             <label class="font-bold">店舗詳細</label>
-                            <textarea class="w-full h-[125px]" name="description">{{ $shop->description }}</textarea>
+                            <textarea class="w-full h-[125px] rounded" name="description">{{ $shop->description }}</textarea>
                             <div class="text-red-500">
                                 @error('description')
                                 {{ $message }}
@@ -133,6 +127,16 @@
                         <div class="mt-4">
                             <label class="font-bold block mb-2">コース</label>
                             <div id="course-edit-container" data-initial-index="{{ old('new_courses') ? count(old('new_courses')) : 0 }}">
+                                @if ($errors->has('courses'))
+                                <div class="text-red-500 text-sm mb-2">
+                                    {{ $errors->first('courses') }}
+                                </div>
+                                @endif
+                                @if ($errors->has('new_courses'))
+                                <div class="text-red-500 text-sm mb-2">
+                                    {{ $errors->first('new_courses') }}
+                                </div>
+                                @endif
                                 @foreach($courses as $index => $course)
                                 <div class="course-group mb-4 border-t pt-4">
                                     <input type="hidden" name="courses[{{ $index }}][id]" value="{{ $course->id }}">
@@ -197,7 +201,7 @@
                                 ] + ['errors' => $errors]) {{-- ← errorsを明示的に渡す --}}
                                 @endforeach
                             </div>
-                            <button type="button" id="add-new-course" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded">
+                            <button type="button" id="add-new-course" class="mt-2 bg-gray-300 px-3 py-1 rounded hover:bg-gray-400">
                                 ＋ 新しいコースを追加
                             </button>
                         </div>

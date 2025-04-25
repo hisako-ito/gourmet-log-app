@@ -88,8 +88,6 @@ class OwnerController extends Controller
 
     public function updateShop($shop_id, UpdateShopRequest $request)
     {
-        Log::debug('★updateShopに入りました');
-        Log::debug('★リクエスト内容', $request->all());
         $shop = Shop::find($shop_id);
 
         $imagePath = $shop->image;
