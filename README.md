@@ -34,15 +34,7 @@ mysql:
 ```
 php artisan key:generate
 ```
-6. マイグレーションの実行
-```
-php artisan migrate
-```
-7. シーディングを実行する
-```
-php artisan db:seed
-```
-8. storageディレクトリ配下の再作成  
+6. storageディレクトリ配下の再作成  
 (理由：開発時、誤ってstorageディレクトリを削除してしまい、再作成しないとパーミッションの問題でキャッシュクリアができなくなってしまったため)
 ```
 # storage配下の再作成（Laravelが必要とする構造）
@@ -57,6 +49,15 @@ mkdir -p storage/logs
 chown -R www-data:www-data storage bootstrap/cache
 chmod -R 775 storage bootstrap/cache
 ```
+7. マイグレーションの実行
+```
+php artisan migrate
+```
+8. シーディングを実行する
+```
+php artisan db:seed
+```
+
 9. シンボリックリンクを作成する
 ```
 php artisan storage:link
