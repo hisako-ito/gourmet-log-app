@@ -282,7 +282,7 @@ STRIPE_SECRET_KEY="シークレットキー"
 * MySQL 15.1
 
 ## ER図
-![gourmet-log-app](https://github.com/user-attachments/assets/da41dd17-41b5-46dc-a529-734323a8a2c7)
+![gourmet-log-app](https://github.com/user-attachments/assets/d2aefc20-9a6d-4adf-a92e-7bf869164828)
 
 ## URL
 
