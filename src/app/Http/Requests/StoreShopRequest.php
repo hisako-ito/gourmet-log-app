@@ -31,7 +31,7 @@ class StoreShopRequest extends FormRequest
             'description' => 'required|max:400',
             'courses' => 'required|array',
             'courses.*.name' => 'nullable|max:255',
-            'courses.*.price' => 'nullable',
+            'courses.*.price' => 'nullable|min:0',
             'courses.*.description' => 'nullable|max:400',
         ];
     }
