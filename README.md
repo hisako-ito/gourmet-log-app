@@ -280,7 +280,7 @@ STRIPE_SECRET_KEY="シークレットキー"
 ## 使用技術(実行環境)
 * PHP 7.4.9
 * Laravel 8.83.29
-* MySQL 15.1
+* MySQL  8.0.26 
 
 ## ER図
 ![gourmet-log-app](https://github.com/user-attachments/assets/d2aefc20-9a6d-4adf-a92e-7bf869164828)
